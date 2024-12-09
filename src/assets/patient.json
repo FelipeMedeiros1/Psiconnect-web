@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "status": "Ativo",
+    "nome": "Felipe Medeiros",
+    "cpf": "123.456.789-00",
+    "contato": {
+      "email": "medeiros@medeiros.com",
+      "telefone": "(11) 99999-9999"
+    }
+  },
+
+  {
+    "id": 2,
+    "status": "Ativo",
+    "nome": "Teste01 Medeiros",
+    "cpf": "123.456.789-11",
+    "contato": {
+      "email": "medeiros@medeiros.com",
+      "telefone": "(11) 99999-9999"
+    }
+  },
+  {
+    "id": 3,
+    "status": "Ativo",
+    "nome": "Teste02 Medeiros",
+    "cpf": "123.456.789-33",
+    "contato": {
+      "email": "medeiros@medeiros.com",
+      "telefone": "(11) 99999-9999"
+    }
+  }
+]

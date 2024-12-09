@@ -1,0 +1,238 @@
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-form-field class="full-width">
+        <mat-label>Data de Nascimento</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="dataNascimento"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <ng-container *ngIf="idadePaciente !== null && idadePaciente < 18">
+        <mat-form-field class="full-width">
+          <mat-label>Responsável nome</mat-label>
+          <input matInput formControlName="nomeResponsavel" />
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Responsável CPF</mat-label>
+          <input matInput formControlName="cpfResponsavel" />
+        </mat-form-field>
+      </ng-container>
+
+      <mat-form-field class="full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" />
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Profissão</mat-label>
+        <input matInput formControlName="profissao" />
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="telefone" />
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Logradouro</mat-label>
+        <input matInput formControlName="logradouro" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Número</mat-label>
+        <input matInput formControlName="numero" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Complemento</mat-label>
+        <input matInput formControlName="complemento" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="cep" />
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Bairro</mat-label>
+        <input matInput formControlName="bairro" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Cidade</mat-label>
+        <input matInput formControlName="cidade" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>UF</mat-label>
+        <input matInput formControlName="uf" />
+      </mat-form-field>
+    </form>
+
+    <mat-card-actions style="display: flex; justify-content: center">
+      <button mat-raised-button (click)="onSubmit()" color="primary">
+        Salvar
+      </button>
+      <button mat-raised-button (click)="onCancel()">Cancelar</button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>
+
+<!--
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field class="full-width">
+        <mat-label>Data de Nascimento</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="dataNascimento"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error
+          *ngIf="
+            form.get('dataNascimento')?.invalid &&
+            form.get('dataNascimento')?.touched
+          "
+        >
+          A data de nascimento é obrigatória e deve ser uma data válida.
+        </mat-error>
+      </mat-form-field>
+
+      <ng-container *ngIf="idadePaciente !== null && idadePaciente < 18">
+        <mat-form-field class="full-width">
+          <mat-label>Nome do Responsável</mat-label>
+          <input matInput formControlName="nomeResponsavel" />
+          <mat-error
+            *ngIf="
+              form.get('nomeResponsavel')?.invalid &&
+              form.get('nomeResponsavel')?.touched
+            "
+          >
+            O nome do responsável é obrigatório.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>CPF do Responsável</mat-label>
+          <input matInput formControlName="cpfResponsavel" />
+          <mat-error
+            *ngIf="
+              form.get('cpfResponsavel')?.invalid &&
+              form.get('cpfResponsavel')?.touched
+            "
+          >
+            O CPF do responsável é obrigatório e deve ter 11 dígitos.
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+
+      <mat-form-field class="full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+        <mat-error
+          *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched"
+        >
+          O nome é obrigatório.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" />
+        <mat-error *ngIf="form.get('cpf')?.invalid && form.get('cpf')?.touched">
+          O CPF é obrigatório e deve ter 11 dígitos.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Profissão</mat-label>
+        <input matInput formControlName="profissao" />
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="telefone" />
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+        <mat-error
+          *ngIf="
+            form.get('contato.email')?.invalid &&
+            form.get('contato.email')?.touched
+          "
+        >
+          Email inválido.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Logradouro</mat-label>
+        <input matInput formControlName="logradouro" />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Bairro</mat-label>
+        <input matInput formControlName="bairro" />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="cep" />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Cidade</mat-label>
+        <input matInput formControlName="cidade" />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>UF</mat-label>
+        <input matInput formControlName="uf" />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Complemento</mat-label>
+        <input matInput formControlName="complemento" />
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Número</mat-label>
+        <input matInput type="number" formControlName="numero" />
+      </mat-form-field>
+
+      <mat-card-actions>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          Salvar
+        </button>
+        <button mat-raised-button (click)="onCancel()">Cancelar</button>
+      </mat-card-actions>
+    </form>
+    <mat-card-actions style="display: flex; justify-content: center">
+      <button mat-raised-button (click)="onSubmit()" color="primary">
+        Salvar
+      </button>
+      <button mat-raised-button (click)="onCancel()">Cancelar</button>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>
+-->

@@ -1,0 +1,45 @@
+<mat-sidenav-container class="side-container">
+  <mat-sidenav #sidenav mode="side" opened>
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        (click)="updateTitle('Agendamento')"
+        routerLink="/appointment"
+        >Agendamento</a
+      >
+
+      <a mat-list-item (click)="updateTitle('Paciente')" routerLink="/patient"
+        >Paciente</a
+      >
+      <a
+        mat-list-item
+        (click)="updateTitle('Psicólogo')"
+        routerLink="/psychologist"
+        >Psicólogo</a
+      >
+
+      <a mat-list-item (click)="updateTitle('Relatório')" routerLink="/report"
+        >Relatório</a
+      >
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="spacer">{{ pageTitle }}</span>
+
+      <mat-form-field class="input-container" appearance="outline">
+        <input matInput placeholder="Pesquisa" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-toolbar>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

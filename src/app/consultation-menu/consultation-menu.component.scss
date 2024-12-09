@@ -1,0 +1,30 @@
+.side-container {
+  height: 100vh; // Define a altura do container
+
+  .example-container {
+    height: 100%; // Garante que o container ocupe toda a altura
+  }
+
+  mat-sidenav {
+    width: 200px; // Largura do sidenav
+  }
+
+  mat-sidenav-content {
+    padding: 16px; // Espaçamento interno do conteúdo
+  }
+
+  .content {
+    margin: 16px; // Margem do conteúdo
+  }
+
+  .input-container {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    margin-top: 20px; /* Ajuste a margem superior conforme necessário */
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+    padding-left: 16px;
+  }
+}

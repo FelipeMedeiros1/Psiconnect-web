@@ -1,0 +1,12 @@
+.app-header {
+  .spacer {
+    flex: 1 1 auto;
+    padding-left: 16px;
+  }
+  .mat-toolbar {
+    background: linear-gradient(to bottom, #0959a4, #87ceeb, #0084ff, #0959a4);
+    color: white;
+    padding: 0 96px;
+    height: 58px;
+  }
+}

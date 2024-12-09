@@ -1,0 +1,56 @@
+<div *ngIf="patiens$ | async as patient; else loading">
+  <mat-table [dataSource]="patient" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef>Prontuário</mat-header-cell>
+      <mat-cell *matCellDef="let patient">{{ patient.id }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+      <mat-cell *matCellDef="let patient">
+        {{ patient.status ? "Ativo" : "Inativo" }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="nome">
+      <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+      <mat-cell *matCellDef="let patient">{{ patient.nome }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+      <mat-cell *matCellDef="let patient">{{ patient.email }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="cpf">
+      <mat-header-cell *matHeaderCellDef>Cpf</mat-header-cell>
+      <mat-cell *matCellDef="let patient">{{ patient.cpf }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>
+        <button (click)="onAdd()" mat-icon-button aria-label="Inserir Paciente">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-header-cell>
+
+      <mat-cell *matCellDef="let patient">
+        <button mat-icon-button aria-label="Editar Paciente">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button mat-icon-button aria-label="Remover Paciente">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+</div>
+<ng-template #loading>
+  <div class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>
