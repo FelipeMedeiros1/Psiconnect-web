@@ -1,5 +1,9 @@
 <mat-sidenav-container class="side-container">
-  <mat-sidenav #sidenav mode="side" opened>
+  <mat-sidenav
+    #sidenav
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="!isMobile"
+  >
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a
@@ -26,7 +30,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-toolbar class="">
+    <mat-toolbar class="page-toolbar">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
@@ -39,7 +43,7 @@
     </mat-toolbar>
 
     <div class="content">
-      <router-outlet></router-outlet>
+      <ng-content></ng-content>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

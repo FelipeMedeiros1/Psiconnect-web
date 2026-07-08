@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,9 +9,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./consultation-menu.component.scss'],
 })
 export class ConsultationMenuComponent {
-  pageTitle: string = 'Agendamento';
+  @ViewChild('sidenav') sidenav?: MatSidenav;
 
-  constructor(private router: Router) {}
+  pageTitle: string = 'Agendamento';
+  isMobile = false;
+
+  constructor(
+    private router: Router,
+    private breakpointObserver: BreakpointObserver
+  ) {
+    this.breakpointObserver
+      .observe([Breakpoints.Handset])
+      .subscribe((result) => (this.isMobile = result.matches));
+  }
 
   ngOnInit() {
     this.router.events.subscribe(() => {
@@ -20,9 +32,21 @@ export class ConsultationMenuComponent {
 
   updateTitle(title: string) {
     this.pageTitle = title;
+    this.closeMenuOnMobile();
+  }
+
+  closeMenuOnMobile() {
+    if (this.isMobile) {
+      this.sidenav?.close();
+    }
   }
 
   private updateTitleBasedOnRoute(route: string) {
+    if (route.startsWith('/patient/edit/')) {
+      this.pageTitle = 'Paciente - Editar';
+      return;
+    }
+
     switch (route) {
       case '/appointment':
         this.pageTitle = 'Agendamento';

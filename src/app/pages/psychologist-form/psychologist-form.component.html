@@ -1,0 +1,111 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Novo psicólogo</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field class="full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>CRP</mat-label>
+        <input matInput formControlName="crp" inputmode="numeric" />
+        <mat-hint>Informe de 4 a 7 números.</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Especialidade</mat-label>
+        <mat-select formControlName="especialidade">
+          <mat-option
+            *ngFor="let specialty of specialties"
+            [value]="specialty.value"
+          >
+            {{ specialty.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="telefone" inputmode="tel" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>E-mail</mat-label>
+        <input matInput formControlName="email" type="email" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="cep" inputmode="numeric" />
+        <mat-hint *ngIf="searchingZipCode">Buscando endereço...</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Número</mat-label>
+        <input matInput formControlName="numero" />
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Logradouro</mat-label>
+        <input matInput formControlName="logradouro" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Bairro</mat-label>
+        <input matInput formControlName="bairro" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Complemento</mat-label>
+        <input matInput formControlName="complemento" />
+      </mat-form-field>
+
+      <mat-form-field *ngIf="!municipalityLoadError">
+        <mat-label>Cidade</mat-label>
+        <mat-select
+          formControlName="cidade"
+          [disabled]="loadingMunicipalities"
+          (selectionChange)="onMunicipalitySelected($event.value)"
+        >
+          <mat-option *ngIf="loadingMunicipalities" disabled>
+            Carregando cidades...
+          </mat-option>
+          <mat-option
+            *ngFor="let municipality of municipalities"
+            [value]="municipality.id.toString()"
+          >
+            {{ municipality.name }} - {{ municipality.state }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="municipalityLoadError">
+        <mat-label>Cidade</mat-label>
+        <input matInput formControlName="cidade" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>UF</mat-label>
+        <input matInput formControlName="uf" readonly />
+      </mat-form-field>
+
+      <div class="form-actions full-width">
+        <button mat-raised-button type="button" (click)="onCancel()">
+          Cancelar
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="saving || loadingMunicipalities"
+        >
+          {{ saving ? "Salvando..." : "Salvar" }}
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

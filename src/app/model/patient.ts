@@ -1,9 +1,13 @@
 export interface Patient {
+  id?: number;
+  status?: boolean | string;
+  email?: string;
+  telefone?: string;
   responsavel: {
     nomeResponsavel: string;
     cpfResponsavel: string;
   };
-  dataNascimento: Date;
+  dataNascimento: Date | string;
   nome: string;
   cpf: string;
   profissao: string;

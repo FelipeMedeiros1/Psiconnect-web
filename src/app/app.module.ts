@@ -18,6 +18,7 @@ import { PatientFormComponent } from './pages/patient-form/patient-form.componen
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConsultationMenuComponent } from './consultation-menu/consultation-menu.component';
 import { CoreModule } from './core/core.module';
+import { PsychologistFormComponent } from './pages/psychologist-form/psychologist-form.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { CoreModule } from './core/core.module';
     ErrorDialogComponent,
     PatientFormComponent,
     ConsultationMenuComponent,
+    PsychologistFormComponent,
   ],
   imports: [
     BrowserModule,

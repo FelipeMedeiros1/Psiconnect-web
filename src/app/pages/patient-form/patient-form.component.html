@@ -1,18 +1,27 @@
 <mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      {{ isEditing ? "Editar paciente" : "Novo paciente" }}
+    </mat-card-title>
+  </mat-card-header>
   <mat-card-content>
     <form [formGroup]="form">
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width" *ngIf="!isEditing">
         <mat-label>Data de Nascimento</mat-label>
         <input
           matInput
           [matDatepicker]="picker"
           formControlName="dataNascimento"
+          readonly
+          (click)="picker.open()"
         />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-      <ng-container *ngIf="idadePaciente !== null && idadePaciente < 18">
+      <ng-container
+        *ngIf="!isEditing && idadePaciente !== null && idadePaciente < 18"
+      >
         <mat-form-field class="full-width">
           <mat-label>Responsável nome</mat-label>
           <input matInput formControlName="nomeResponsavel" />
@@ -29,12 +38,12 @@
         <input matInput formControlName="nome" />
       </mat-form-field>
 
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width" *ngIf="!isEditing">
         <mat-label>CPF</mat-label>
         <input matInput formControlName="cpf" />
       </mat-form-field>
 
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width" *ngIf="!isEditing">
         <mat-label>Profissão</mat-label>
         <input matInput formControlName="profissao" />
       </mat-form-field>
@@ -49,45 +58,65 @@
         <input matInput formControlName="email" />
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field *ngIf="!isEditing">
         <mat-label>Logradouro</mat-label>
         <input matInput formControlName="logradouro" />
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field *ngIf="!isEditing">
         <mat-label>Número</mat-label>
         <input matInput formControlName="numero" />
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field *ngIf="!isEditing">
         <mat-label>Complemento</mat-label>
         <input matInput formControlName="complemento" />
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field *ngIf="!isEditing">
         <mat-label>CEP</mat-label>
         <input matInput formControlName="cep" />
       </mat-form-field>
 
-      <mat-form-field class="full-width">
+      <mat-form-field class="full-width" *ngIf="!isEditing">
         <mat-label>Bairro</mat-label>
         <input matInput formControlName="bairro" />
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field *ngIf="!isEditing && !municipalityLoadError">
         <mat-label>Cidade</mat-label>
-        <input matInput formControlName="cidade" />
+        <mat-select
+          formControlName="cidade"
+          [disabled]="loadingMunicipalities"
+          (selectionChange)="onMunicipalitySelected($event.value)"
+        >
+          <mat-option *ngIf="loadingMunicipalities" disabled>
+            Carregando cidades...
+          </mat-option>
+          <mat-option
+            *ngFor="let municipality of municipalities"
+            [value]="municipality.id.toString()"
+          >
+            {{ municipality.name }} - {{ municipality.state }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field *ngIf="!isEditing && municipalityLoadError">
+        <mat-label>Cidade</mat-label>
+        <input matInput formControlName="cidade" />
+        <mat-hint>Digite a cidade; não foi possível acessar o IBGE.</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="!isEditing">
         <mat-label>UF</mat-label>
         <input matInput formControlName="uf" />
       </mat-form-field>
     </form>
 
-    <mat-card-actions style="display: flex; justify-content: center">
+    <mat-card-actions class="form-actions">
       <button mat-raised-button (click)="onSubmit()" color="primary">
-        Salvar
+        {{ isEditing ? "Atualizar" : "Salvar" }}
       </button>
       <button mat-raised-button (click)="onCancel()">Cancelar</button>
     </mat-card-actions>

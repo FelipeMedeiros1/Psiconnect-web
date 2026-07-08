@@ -10,3 +10,15 @@
     height: 58px;
   }
 }
+
+@media (max-width: 599px) {
+  .app-header {
+    .mat-toolbar {
+      padding: 0 16px;
+    }
+
+    .spacer {
+      padding-left: 0;
+    }
+  }
+}

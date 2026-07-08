@@ -28,3 +28,49 @@
     padding-left: 16px;
   }
 }
+
+.side-container {
+  height: calc(100dvh - 58px);
+
+  mat-sidenav {
+    width: 220px;
+  }
+
+  mat-sidenav-content {
+    padding: 0;
+  }
+
+  .content {
+    margin: 24px;
+  }
+
+  .input-container {
+    width: min(280px, 35vw);
+  }
+}
+
+@media (max-width: 599px) {
+  .side-container {
+    .page-toolbar {
+      box-sizing: border-box;
+      height: auto;
+      min-height: 64px;
+      padding: 8px;
+      flex-wrap: wrap;
+    }
+
+    .spacer {
+      padding-left: 8px;
+    }
+
+    .input-container {
+      order: 2;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .content {
+      margin: 12px;
+    }
+  }
+}

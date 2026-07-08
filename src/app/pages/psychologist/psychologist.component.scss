@@ -1,0 +1,74 @@
+.add-psychologist {
+  display: flex;
+  margin: 0 0 12px auto;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+mat-table {
+  width: 100%;
+}
+
+.mat-column-nome {
+  overflow-wrap: anywhere;
+}
+
+.mat-column-crp {
+  flex: 0 0 140px;
+}
+
+.mat-column-especialidade {
+  flex: 0 0 180px;
+}
+
+.data-row {
+  cursor: pointer;
+}
+
+.data-row:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: -2px;
+}
+
+.expanded-row {
+  background: rgba(25, 118, 210, 0.06);
+}
+
+.detail-row,
+.detail-cell {
+  min-height: 0;
+}
+
+.detail-cell {
+  padding: 0 16px;
+}
+
+.psychologist-details {
+  width: 100%;
+  padding: 12px 0 16px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.psychologist-details > div + div {
+  margin-top: 4px;
+}
+
+@media (max-width: 599px) {
+  .mat-cell,
+  .mat-header-cell {
+    padding: 0 6px;
+  }
+
+  .mat-column-crp {
+    flex-basis: 90px;
+  }
+
+  .mat-column-especialidade {
+    flex-basis: 110px;
+  }
+}

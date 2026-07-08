@@ -28,4 +28,14 @@ export class PatientService {
     console.log(record);
     return this.httpClient.post<Patient>(this.API, record).pipe(first());
   }
+
+  findById(id: number): Observable<Patient> {
+    return this.httpClient.get<Patient>(`${this.API}/${id}`).pipe(first());
+  }
+
+  update(id: number, record: Partial<Patient>): Observable<Patient> {
+    return this.httpClient
+      .put<Patient>(`${this.API}/${id}`, { ...record, id })
+      .pipe(first());
+  }
 }

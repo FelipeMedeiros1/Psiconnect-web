@@ -1,1 +1,68 @@
-<p>colocar lógica Psicólogo</p>
+<button
+  class="add-psychologist"
+  mat-raised-button
+  color="primary"
+  (click)="onAdd()"
+>
+  <mat-icon>add</mat-icon>
+  Novo psicólogo
+</button>
+
+<div class="table-wrapper mat-elevation-z8" *ngIf="psychologists$ | async as psychologists">
+  <mat-table [dataSource]="psychologists" multiTemplateDataRows>
+
+    <ng-container matColumnDef="nome">
+      <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+      <mat-cell *matCellDef="let psychologist">{{ psychologist.nome }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="crp">
+      <mat-header-cell *matHeaderCellDef>CRP</mat-header-cell>
+      <mat-cell *matCellDef="let psychologist">{{ psychologist.crp }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="especialidade">
+      <mat-header-cell *matHeaderCellDef>Especialidade</mat-header-cell>
+      <mat-cell *matCellDef="let psychologist">
+        {{ getSpecialtyLabel(psychologist.especialidade) }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <mat-cell *matCellDef="let psychologist" class="detail-cell">
+        <div
+          class="psychologist-details"
+          *ngIf="expandedPsychologist === psychologist"
+        >
+          <div>
+            <strong>E-mail:</strong>
+            {{ psychologist.email || "Não informado" }}
+          </div>
+          <div>
+            <strong>Status:</strong>
+            {{ psychologist.ativo ? "Ativo" : "Inativo" }}
+          </div>
+          <div>
+            <strong>Telefone:</strong>
+            {{ psychologist.telefone || "Não informado" }}
+          </div>
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="data-row"
+      [class.expanded-row]="expandedPsychologist === row"
+      [attr.aria-expanded]="expandedPsychologist === row"
+      tabindex="0"
+      (click)="toggleDetails(row)"
+      (keydown.enter)="toggleDetails(row)"
+    ></mat-row>
+    <mat-row
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="detail-row"
+    ></mat-row>
+  </mat-table>
+</div>

@@ -5,3 +5,106 @@
   align-items: center;
   justify-content: center;
 }
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 4px;
+}
+
+mat-table {
+  width: 100%;
+}
+
+.add-patient {
+  display: flex;
+  margin: 0 0 12px auto;
+}
+
+.mat-column-status,
+.mat-column-email {
+  display: none;
+}
+
+.mat-column-id {
+  flex: 0 0 120px;
+}
+
+.mat-column-nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.mat-column-cpf {
+  flex: 0 0 180px;
+}
+
+.mat-column-actions {
+  flex: 0 0 100px;
+  justify-content: center;
+}
+
+.data-row {
+  cursor: pointer;
+}
+
+.data-row:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: -2px;
+}
+
+.expanded-row {
+  background: rgba(25, 118, 210, 0.06);
+}
+
+.detail-row {
+  min-height: 0;
+}
+
+.detail-cell {
+  min-height: 0;
+  padding: 0 16px;
+}
+
+.patient-details {
+  width: 100%;
+  padding: 12px 0 16px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.patient-details > div + div {
+  margin-top: 4px;
+}
+
+.detail-error {
+  color: #b00020;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 599px) {
+  .mat-cell,
+  .mat-header-cell {
+    padding: 0 6px;
+  }
+
+  .mat-column-id {
+    flex-basis: 68px;
+    overflow-wrap: anywhere;
+  }
+
+  .mat-column-cpf {
+    flex-basis: 118px;
+  }
+
+  .mat-column-actions {
+    flex-basis: 76px;
+  }
+
+  .mat-column-actions button {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+  }
+}
