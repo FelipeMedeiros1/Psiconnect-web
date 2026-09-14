@@ -25,6 +25,30 @@ html,
 body {
   height: 100%;
 }
+
+@media print {
+  app-header,
+  app-footer {
+    display: none !important;
+  }
+
+  app-consultation-menu mat-sidenav,
+  app-consultation-menu mat-sidenav-content > mat-toolbar {
+    display: none !important;
+  }
+
+  app-consultation-menu .side-container,
+  app-consultation-menu mat-sidenav-content {
+    height: auto !important;
+    min-height: 0 !important;
+    margin-left: 0 !important;
+    overflow: visible !important;
+  }
+
+  app-consultation-menu .content {
+    margin: 0 !important;
+  }
+}
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;

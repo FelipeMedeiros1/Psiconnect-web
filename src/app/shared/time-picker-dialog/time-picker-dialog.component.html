@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Horário da consulta</h2>
+<mat-dialog-content>
+  <div class="time-display">
+    <button mat-button (click)="step = 'hour'" [class.active]="step === 'hour'">{{ hour | number:'2.0' }}</button>
+    <span>:</span>
+    <button mat-button (click)="step = 'minute'" [class.active]="step === 'minute'">{{ minute | number:'2.0' }}</button>
+    <mat-button-toggle-group [(value)]="period" aria-label="Período">
+      <mat-button-toggle value="AM">AM</mat-button-toggle>
+      <mat-button-toggle value="PM">PM</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div class="clock-face">
+    <div class="clock-center"></div>
+    <ng-container *ngIf="step === 'hour'">
+      <button class="clock-number" *ngFor="let value of hours" [class.selected]="hour === value"
+        [ngStyle]="position(value, 'hour')" (click)="selectHour(value)">{{ value }}</button>
+    </ng-container>
+    <ng-container *ngIf="step === 'minute'">
+      <button class="clock-number" *ngFor="let value of minutes" [class.selected]="minute === value"
+        [ngStyle]="position(value, 'minute')" (click)="minute = value">{{ value | number:'2.0' }}</button>
+    </ng-container>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" (click)="confirm()">Confirmar</button>
+</mat-dialog-actions>

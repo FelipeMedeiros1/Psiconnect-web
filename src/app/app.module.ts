@@ -7,6 +7,7 @@ import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContainerComponent } from './shared/container/container.component';
+import { HttpClientModule } from '@angular/common/http';
 import { ModalComponent } from './shared/modal/modal.component';
 import { AppointmentComponent } from './pages/appointment/appointment.component';
 import { PatientComponent } from './pages/patient/patient.component';
@@ -17,8 +18,12 @@ import { ErrorDialogComponent } from './shared/error-dialog/error-dialog.compone
 import { PatientFormComponent } from './pages/patient-form/patient-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConsultationMenuComponent } from './consultation-menu/consultation-menu.component';
-import { CoreModule } from './core/core.module';
 import { PsychologistFormComponent } from './pages/psychologist-form/psychologist-form.component';
+import { AppointmentFormComponent } from './pages/appointment-form/appointment-form.component';
+import { TimePickerDialogComponent } from './shared/time-picker-dialog/time-picker-dialog.component';
+import { EvolutionFormDialogComponent } from './shared/evolution-form-dialog/evolution-form-dialog.component';
+import { ServiceLocationComponent } from './pages/service-location/service-location.component';
+import { ServiceLocationFormComponent } from './pages/service-location-form/service-location-form.component';
 
 @NgModule({
   declarations: [
@@ -36,13 +41,18 @@ import { PsychologistFormComponent } from './pages/psychologist-form/psychologis
     PatientFormComponent,
     ConsultationMenuComponent,
     PsychologistFormComponent,
+    AppointmentFormComponent,
+    TimePickerDialogComponent,
+    EvolutionFormDialogComponent,
+    ServiceLocationComponent,
+    ServiceLocationFormComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     AppMaterialModule,
-    CoreModule,
+    HttpClientModule,
     ReactiveFormsModule,
   ],
   providers: [],

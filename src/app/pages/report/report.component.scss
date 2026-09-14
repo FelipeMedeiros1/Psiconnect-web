@@ -1,0 +1,48 @@
+.history-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.history-summary {
+  display: flex;
+  gap: 32px;
+  margin: 0 0 20px;
+  font-size: 16px;
+}
+
+.consultation-report {
+  display: none;
+}
+
+@media print {
+  mat-card {
+    display: none;
+  }
+
+  .consultation-report {
+    display: block;
+    padding: 24px;
+    color: #000;
+  }
+
+  .consultation-report table {
+    width: 100%;
+    margin-top: 24px;
+    border-collapse: collapse;
+  }
+
+  .consultation-report th,
+  .consultation-report td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #777;
+  }
+
+  .report-totals {
+    margin-top: 24px;
+    text-align: right;
+  }
+}

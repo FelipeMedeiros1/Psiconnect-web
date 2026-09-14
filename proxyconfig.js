@@ -3,6 +3,8 @@ const PROXY_CONFIG = [
     context: [
       "/pacientes",
       "/psicologos",
+      "/sessoes",
+      "/locais-atendimento",
       "/auth",
       "/oauth2",
       "/login",

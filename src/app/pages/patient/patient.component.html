@@ -1,18 +1,7 @@
 <div *ngIf="patiens$ | async as patient; else loading">
-  <button
-    class="add-patient"
-    (click)="onAdd()"
-    mat-raised-button
-    color="primary"
-  >
-    <mat-icon>add</mat-icon>
-    Novo paciente
-  </button>
-
-  <div class="table-wrapper mat-elevation-z8">
-  <mat-table [dataSource]="patient" multiTemplateDataRows>
+  <mat-table [dataSource]="patient" class="mat-elevation-z8">
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>Prontuário</mat-header-cell>
       <mat-cell *matCellDef="let patient">{{ patient.id }}</mat-cell>
     </ng-container>
 
@@ -30,7 +19,7 @@
 
     <ng-container matColumnDef="email">
       <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
-      <mat-cell *matCellDef="let patient">{{ getEmail(patient) }}</mat-cell>
+      <mat-cell *matCellDef="let patient">{{ patient.email }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="cpf">
@@ -39,72 +28,26 @@
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>
+        <button (click)="onAdd()" mat-icon-button aria-label="Inserir Paciente" matTooltip="Cadastrar novo paciente">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-header-cell>
 
       <mat-cell *matCellDef="let patient">
-        <button
-          mat-icon-button
-          aria-label="Editar Paciente"
-          (click)="onEdit(patient, $event)"
-        >
+        <button mat-icon-button aria-label="Editar Paciente" (click)="onEdit(patient)">
           <mat-icon>edit</mat-icon>
         </button>
 
-        <button
-          mat-icon-button
-          aria-label="Remover Paciente"
-          (click)="$event.stopPropagation()"
-        >
+        <button mat-icon-button aria-label="Inativar Paciente" (click)="onDeactivate(patient)" [disabled]="!patient.status">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="expandedDetail">
-      <mat-cell *matCellDef="let patient" class="detail-cell">
-        <div
-          class="patient-details"
-          *ngIf="expandedPatient === patient"
-        >
-          <ng-container *ngIf="getPatientDetails(patient) as details">
-            <div>
-              <strong>Telefone:</strong>
-              <span *ngIf="patient.id && loadingDetails.has(patient.id)">
-                Carregando...
-              </span>
-              <span *ngIf="!patient.id || !loadingDetails.has(patient.id)">
-                {{ getPhone(details) }}
-              </span>
-            </div>
-            <div><strong>Status:</strong> {{ getStatus(details) }}</div>
-            <div><strong>E-mail:</strong> {{ getEmail(details) }}</div>
-            <div
-              class="detail-error"
-              *ngIf="patient.id && detailErrors.has(patient.id)"
-            >
-              Não foi possível carregar o telefone.
-            </div>
-          </ng-container>
-        </div>
-      </mat-cell>
-    </ng-container>
-
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      class="data-row"
-      [class.expanded-row]="expandedPatient === row"
-      [attr.aria-expanded]="expandedPatient === row"
-      tabindex="0"
-      (click)="toggleDetails(row)"
-      (keydown.enter)="toggleDetails(row)"
-    ></mat-row>
-    <mat-row
-      *matRowDef="let row; columns: ['expandedDetail']"
-      class="detail-row"
-    ></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
-  </div>
 </div>
 <ng-template #loading>
   <div class="loading-spinner">

@@ -1,7 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { MatSidenav } from '@angular/material/sidenav';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { SearchService } from '../services/search.service';
 
 @Component({
   selector: 'app-consultation-menu',
@@ -9,18 +8,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./consultation-menu.component.scss'],
 })
 export class ConsultationMenuComponent {
-  @ViewChild('sidenav') sidenav?: MatSidenav;
+  pageTitle: string = 'Agenda';
 
-  pageTitle: string = 'Agendamento';
-  isMobile = false;
+  constructor(private router: Router, private searchService: SearchService) {}
 
-  constructor(
-    private router: Router,
-    private breakpointObserver: BreakpointObserver
-  ) {
-    this.breakpointObserver
-      .observe([Breakpoints.Handset])
-      .subscribe((result) => (this.isMobile = result.matches));
+  onSearch(value: string): void {
+    this.searchService.setQuery(value);
   }
 
   ngOnInit() {
@@ -32,45 +25,22 @@ export class ConsultationMenuComponent {
 
   updateTitle(title: string) {
     this.pageTitle = title;
-    this.closeMenuOnMobile();
-  }
-
-  closeMenuOnMobile() {
-    if (this.isMobile) {
-      this.sidenav?.close();
-    }
   }
 
   private updateTitleBasedOnRoute(route: string) {
-    if (route.startsWith('/patient/edit/')) {
-      this.pageTitle = 'Paciente - Editar';
-      return;
-    }
-
-    switch (route) {
-      case '/appointment':
-        this.pageTitle = 'Agendamento';
-        break;
-      case '/patient':
-        this.pageTitle = 'Paciente';
-        break;
-      case '/patient/include':
-        this.pageTitle = 'Paciente - Novo';
-        break;
-
-      case '/psychologist':
-        this.pageTitle = 'Psicólogo';
-        break;
-      case '/psychologist/include':
-        this.pageTitle = 'Psicólogo - Novo';
-        break;
-
-      case '/report':
-        this.pageTitle = 'Relatório';
-        break;
-      default:
-        this.pageTitle = 'Agendamento';
-        break;
-    }
+    if (route.startsWith('/appointment/include')) this.pageTitle = 'Novo agendamento';
+    else if (route.startsWith('/appointment/edit')) this.pageTitle = 'Editar agendamento';
+    else if (route.startsWith('/appointment')) this.pageTitle = 'Agenda';
+    else if (route.startsWith('/patient/include')) this.pageTitle = 'Novo paciente';
+    else if (route.startsWith('/patient/edit')) this.pageTitle = 'Editar paciente';
+    else if (route.startsWith('/patient')) this.pageTitle = 'Pacientes';
+    else if (route.startsWith('/psychologist/include')) this.pageTitle = 'Novo psicólogo';
+    else if (route.startsWith('/psychologist/edit')) this.pageTitle = 'Editar psicólogo';
+    else if (route.startsWith('/psychologist')) this.pageTitle = 'Psicólogos';
+    else if (route.startsWith('/service-location/include')) this.pageTitle = 'Novo local de atendimento';
+    else if (route.startsWith('/service-location/edit')) this.pageTitle = 'Editar local de atendimento';
+    else if (route.startsWith('/service-location')) this.pageTitle = 'Locais de atendimento';
+    else if (route.startsWith('/history') || route.startsWith('/report')) this.pageTitle = 'Histórico';
+    else this.pageTitle = 'Agenda';
   }
 }

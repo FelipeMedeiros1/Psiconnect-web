@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { catchError, Observable, of } from 'rxjs';
+import { catchError, combineLatest, map, Observable, of } from 'rxjs';
 import { Patient } from 'src/app/model/patient';
 import { PatientService } from 'src/app/services/patient.service';
 import { ErrorDialogComponent } from 'src/app/shared/error-dialog/error-dialog.component';
+import { SearchService } from 'src/app/services/search.service';
 
 @Component({
   selector: 'app-patient',
@@ -23,14 +24,20 @@ export class PatientComponent implements OnInit {
   constructor(
     private patientService: PatientService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private search: SearchService
   ) {
-    this.patiens$ = this.patientService.list().pipe(
-      catchError((error) => {
+    this.patiens$ = combineLatest([
+      this.patientService.list().pipe(catchError((error) => {
         this.onError('Não foi possível carregar os dados');
         return of([]);
-      })
-    );
+      })),
+      this.search.query$,
+    ]).pipe(map(([patients, query]) => patients.filter((patient) =>
+      this.search.matches(query, patient.id, patient.nome, patient.cpf,
+        patient.email, patient.contato?.email, patient.telefone, patient.contato?.telefone,
+        patient.profissao, patient.status ? 'ativo' : 'inativo')
+    )));
   }
 
   onError(errorMessage: string) {
@@ -43,19 +50,20 @@ export class PatientComponent implements OnInit {
 
   onAdd() {
     this.router.navigate(['patient/include']);
-    console.log('onAdd');
   }
 
-  onEdit(patient: Patient, event: Event) {
-    event.stopPropagation();
+  onEdit(patient: Patient): void {
+    this.router.navigate(['patient/edit', patient.id]);
+  }
 
-    if (patient.id == null) {
-      this.onError('Não foi possível identificar o paciente');
-      return;
-    }
+  onDeactivate(patient: Patient): void {
+    if (!patient.id || !patient.status) return;
+    const motivo = window.prompt('Informe o motivo da inativação do paciente:');
+    if (!motivo?.trim()) return;
 
-    this.router.navigate(['/patient/edit', patient.id], {
-      state: { patient },
+    this.patientService.deactivate(patient.id, motivo.trim()).subscribe({
+      next: () => (this.patiens$ = this.patientService.list()),
+      error: () => this.onError('Não foi possível inativar o paciente'),
     });
   }
 

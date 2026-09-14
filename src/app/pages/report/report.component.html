@@ -1,1 +1,92 @@
-<p>report works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Histórico de atendimentos</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="history-filters">
+    <mat-form-field appearance="outline">
+      <mat-label>Psicólogo</mat-label>
+      <mat-select [formControl]="psychologistControl">
+        <mat-option [value]="0">Todos</mat-option>
+        <mat-option *ngFor="let psychologist of psychologists$ | async" [value]="psychologist.id">
+          {{ psychologist.nome }} — {{ psychologist.crp }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Paciente</mat-label>
+      <mat-select [formControl]="patientControl">
+        <mat-option [value]="0">Todos</mat-option>
+        <mat-option *ngFor="let patient of patients$ | async" [value]="patient.id">
+          {{ patient.nome }} — {{ patient.cpf }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" class="print-button" (click)="gerarRelatorio()">
+      <mat-icon>description</mat-icon> Histórico de consultas
+    </button>
+    </div>
+
+    <div class="history-summary" *ngIf="summary$ | async as summary">
+      <span><strong>Atendimentos realizados:</strong> {{ summary.quantidade }}</span>
+      <span><strong>Valor total:</strong> {{ summary.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</span>
+    </div>
+
+    <mat-table *ngIf="history$ | async as history" [dataSource]="history" class="mat-elevation-z8">
+      <ng-container matColumnDef="data">
+        <mat-header-cell *matHeaderCellDef>Data - Hora</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="paciente">
+        <mat-header-cell *matHeaderCellDef>Paciente</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.paciente }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="psicologo">
+        <mat-header-cell *matHeaderCellDef>Psicólogo</mat-header-cell>
+        <mat-cell *matCellDef="let item">{{ item.psicologo }}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="historico">
+        <mat-header-cell *matHeaderCellDef>Registro</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+          <span>{{ prontuario(item) }}</span>
+          <button mat-icon-button (click)="visualizarEvolucao(item)" aria-label="Visualizar evolução">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="acoes">
+        <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+          <button mat-stroked-button color="primary" (click)="repetirAtendimento(item)" aria-label="Repetir atendimento">
+            <mat-icon>event_repeat</mat-icon>
+            Repetir atendimento
+          </button>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </mat-card-content>
+</mat-card>
+
+<section class="consultation-report" *ngIf="history$ | async as history">
+  <h1>Histórico de consultas</h1>
+  <p><strong>Psicólogo:</strong> {{ selectedPsychologistName() }}</p>
+  <p><strong>Paciente:</strong> {{ selectedPatientName() }}</p>
+  <table>
+    <thead><tr><th>Data da consulta</th><th>Paciente</th><th>Psicólogo</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let item of history">
+        <td>{{ item.data | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ item.paciente }}</td>
+        <td>{{ item.psicologo }}</td>
+        <td>{{ item.valorSessao | currency:'BRL':'symbol':'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="report-totals" *ngIf="summary$ | async as summary">
+    <p><strong>Consultas realizadas:</strong> {{ summary.quantidade }}</p>
+    <p><strong>Valor total a pagar:</strong> {{ summary.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</p>
+  </div>
+</section>

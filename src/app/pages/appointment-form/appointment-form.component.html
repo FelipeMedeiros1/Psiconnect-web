@@ -1,0 +1,71 @@
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <mat-form-field class="full-width">
+          <mat-label>Paciente</mat-label>
+          <mat-select formControlName="idPaciente">
+            <mat-option *ngFor="let patient of patients" [value]="patient.id">
+              {{ patient.nome }} — {{ patient.cpf }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Selecione o paciente.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Psicólogo</mat-label>
+          <mat-select formControlName="idPsicologo">
+            <mat-option [value]="0">Selecionar automaticamente</mat-option>
+            <mat-option *ngFor="let psychologist of psychologists" [value]="psychologist.id">
+              {{ psychologist.nome }} — {{ psychologist.crp }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="full-width" *ngIf="!form.controls.idPsicologo.value">
+          <mat-label>Especialidade</mat-label>
+          <mat-select formControlName="especialidade">
+            <mat-option *ngFor="let specialty of specialties" [value]="specialty">
+              {{ specialty }}
+            </mat-option>
+          </mat-select>
+          <mat-hint>Usada para selecionar um psicólogo disponível.</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Data da consulta</mat-label>
+          <input matInput [matDatepicker]="appointmentPicker" formControlName="dataConsulta" [min]="minimumDate" (dateChange)="onDateChanged()" />
+          <mat-datepicker-toggle matSuffix [for]="appointmentPicker"></mat-datepicker-toggle>
+          <mat-datepicker #appointmentPicker></mat-datepicker>
+          <mat-error *ngIf="form.controls.dataConsulta.hasError('pastDate') || form.controls.dataConsulta.hasError('matDatepickerMin')">A data não pode ser anterior à data atual.</mat-error>
+          <mat-error *ngIf="form.controls.dataConsulta.hasError('required')">A data é obrigatória.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Horário da consulta</mat-label>
+          <input matInput formControlName="horario" readonly (click)="openTimePicker()" />
+          <button mat-icon-button matSuffix type="button" (click)="openTimePicker()" aria-label="Selecionar horário">
+            <mat-icon>schedule</mat-icon>
+          </button>
+          <mat-error *ngIf="form.controls.horario.hasError('businessHours')">Use um horário entre 07:00 e 22:00.</mat-error>
+          <mat-error *ngIf="form.controls.horario.hasError('pastTime')">O horário deve ser posterior à hora atual.</mat-error>
+          <mat-error *ngIf="form.controls.horario.hasError('required')">O horário é obrigatório.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-label>Valor da sessão</mat-label>
+          <input matInput type="number" min="0.01" step="0.01" formControlName="valorSessao" (focus)="selectValue($event)" />
+          <span matPrefix>R$&nbsp;</span>
+          <mat-error>Informe um valor maior que zero.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading || saving">
+          {{ saving ? 'Salvando...' : (editId ? 'Atualizar' : 'Agendar') }}
+        </button>
+        <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+      </mat-card-actions>
+    </form>
+  </mat-card-content>
+</mat-card>

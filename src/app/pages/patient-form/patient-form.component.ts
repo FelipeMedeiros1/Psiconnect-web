@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,47 +9,36 @@ import {
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Patient } from 'src/app/model/patient';
 import { PatientService } from 'src/app/services/patient.service';
-import {
-  LocationService,
-  Municipality,
-  ZipCodeAddress,
-} from 'src/app/services/location.service';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  of,
-  switchMap,
-} from 'rxjs';
+import { CepService } from 'src/app/services/cep.service';
+import { catchError, debounceTime, distinctUntilChanged, EMPTY, filter, map, Subscription, switchMap, tap } from 'rxjs';
+import { ServiceLocation } from 'src/app/model/service-location';
+import { ServiceLocationService } from 'src/app/services/service-location.service';
 
 @Component({
   selector: 'app-patient-form',
   templateUrl: './patient-form.component.html',
   styleUrls: ['./patient-form.component.scss'],
 })
-export class PatientFormComponent implements OnInit {
+export class PatientFormComponent implements OnInit, OnDestroy {
   dataNascimento: number | null = null;
   idadePaciente: number | null = null;
-  isEditing = false;
-  patientId: number | null = null;
-  municipalities: Municipality[] = [];
-  loadingMunicipalities = false;
-  municipalityLoadError = false;
-  private lastZipCodeAddress?: ZipCodeAddress;
   private _snackBar = inject(MatSnackBar);
+  private readonly subscriptions = new Subscription();
+  buscandoCep = false;
+  editId: number | null = null;
+  locations: ServiceLocation[] = [];
 
   constructor(
     public dialog: MatDialog,
     private formBuilder: NonNullableFormBuilder,
     private service: PatientService,
-    private locationService: LocationService,
-    private router: Router,
-    private route: ActivatedRoute
+    private cepService: CepService,
+    private locationService: ServiceLocationService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   form = this.formBuilder.group({
@@ -68,16 +57,15 @@ export class PatientFormComponent implements OnInit {
     complemento: [''],
     cidade: [''],
     uf: [''],
+    localAtendimentoId: [0],
   });
 
   transformData(formData: any): Patient | null {
-    const dataNascimento = this.formatDate(formData.dataNascimento);
-    const municipality = this.municipalities.find(
-      (item) => item.id === Number(formData.cidade)
-    );
+    const dataNascimentoStr = formData.dataNascimento;
+    const dataNascimento = new Date(dataNascimentoStr);
 
-    if (!dataNascimento) {
-      console.error('Data inválida:', formData.dataNascimento);
+    if (isNaN(dataNascimento.getTime())) {
+      console.error('Data inválida:', dataNascimentoStr);
       return null;
     }
 
@@ -97,42 +85,44 @@ export class PatientFormComponent implements OnInit {
       endereco: {
         logradouro: formData.logradouro,
         bairro: formData.bairro,
-        cep: String(formData.cep || '').replace(/\D/g, ''),
+        cep: formData.cep,
         numero: formData.numero,
         complemento: formData.complemento,
-        cidade: municipality?.name || formData.cidade,
-        uf: municipality?.state || formData.uf,
+        cidade: formData.cidade,
+        uf: formData.uf,
       },
     };
   }
 
   onSubmit() {
-    const formData = this.form.value;
-
-    if (this.isEditing && this.patientId !== null) {
-      const updateData: Partial<Patient> = {
-        nome: formData.nome,
-        contato: {
-          telefone: formData.telefone || undefined,
-          email: formData.email || undefined,
-        } as any,
-      };
-
-      this.submit(
-        this.service.update(this.patientId, updateData),
-        'Paciente atualizado com sucesso!'
-      );
-      return;
-    }
-
+    const formData = this.form.getRawValue();
     const transformedData = this.transformData(formData);
 
     if (transformedData) {
       console.log('Dados transformados:', transformedData);
-      this.submit(
-        this.service.save(transformedData),
-        'Paciente salvo com sucesso!'
-      );
+      const request = this.editId
+        ? this.service.update(this.editId, {
+            nome: transformedData.nome,
+            contato: transformedData.contato,
+            endereco: transformedData.endereco,
+          })
+        : this.service.save(transformedData);
+      request.pipe(switchMap((result) =>
+        this.service.associateLocation(result.id!, formData.localAtendimentoId || null)
+      )).subscribe({
+        next: (result) => {
+          console.log('Sucesso:', result);
+          this._snackBar.open('Paciente salvo com sucesso!', '', {
+            duration: 3000,
+          });
+          this.router.navigate(['/patient']);
+        },
+        error: (error) =>
+          this.onError(
+            'Erro ao salvar o paciente. Por favor, tente novamente.',
+            error
+          ),
+      });
     } else {
       this.onError('Erro: Data de nascimento inválida.');
     }
@@ -140,22 +130,6 @@ export class PatientFormComponent implements OnInit {
 
   onCancel() {
     this.router.navigate(['/patient']);
-  }
-
-  private formatDate(value: string | Date | null): string | null {
-    if (!value) {
-      return null;
-    }
-
-    const date = value instanceof Date ? value : new Date(value);
-    if (isNaN(date.getTime())) {
-      return null;
-    }
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
   }
 
   onError(message: string, error?: any): void {
@@ -183,6 +157,36 @@ export class PatientFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.locationService.list().subscribe((locations) => {
+      this.locations = locations.filter((location) => location.ativo);
+    });
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (id) {
+      this.editId = id;
+      this.service.findById(id).subscribe((patient) => {
+        this.form.patchValue({
+          dataNascimento: patient.dataNascimento as unknown as string,
+          nomeResponsavel: patient.responsavel?.nomeResponsavel ?? '',
+          cpfResponsavel: patient.responsavel?.cpfResponsavel ?? '',
+          nome: patient.nome,
+          cpf: patient.cpf,
+          profissao: patient.profissao,
+          telefone: patient.contato?.telefone ?? patient.telefone ?? '',
+          email: patient.contato?.email ?? patient.email ?? '',
+          logradouro: patient.endereco?.logradouro ?? '',
+          bairro: patient.endereco?.bairro ?? '',
+          cep: patient.endereco?.cep ?? '',
+          numero: patient.endereco?.numero ?? '',
+          complemento: patient.endereco?.complemento ?? '',
+          cidade: patient.endereco?.cidade ?? '',
+          uf: patient.endereco?.uf ?? '',
+          localAtendimentoId: patient.localAtendimento?.id ?? 0,
+        });
+        this.form.controls.dataNascimento.disable();
+        this.form.controls.cpf.disable();
+        this.form.controls.profissao.disable();
+      });
+    }
     const dataNascimentoControl = this.form.get('dataNascimento');
     if (dataNascimentoControl) {
       dataNascimentoControl.valueChanges.subscribe((data) => {
@@ -190,162 +194,54 @@ export class PatientFormComponent implements OnInit {
       });
     }
 
-    this.setupZipCodeLookup();
+    const cepControl = this.form.get('cep');
+    if (cepControl) {
+      this.subscriptions.add(
+        cepControl.valueChanges
+          .pipe(
+            map((cep) => cep.replace(/\D/g, '')),
+            distinctUntilChanged(),
+            debounceTime(300),
+            filter((cep) => cep.length === 8),
+            tap(() => (this.buscandoCep = true)),
+            switchMap((cep) =>
+              this.cepService.buscar(cep).pipe(
+                catchError(() => {
+                  this.buscandoCep = false;
+                  this._snackBar.open('Não foi possível consultar o CEP.', '', {
+                    duration: 5000,
+                  });
+                  return EMPTY;
+                })
+              )
+            )
+          )
+          .subscribe((endereco) => {
+            this.buscandoCep = false;
 
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (Number.isInteger(id) && id > 0) {
-      this.isEditing = true;
-      this.patientId = id;
-      const patientFromList = history.state?.patient as Patient | undefined;
-      if (patientFromList) {
-        this.fillForm(patientFromList);
-      }
-      this.loadPatient(id, !!patientFromList);
-    } else {
-      this.loadMunicipalities();
+            if (endereco.erro) {
+              cepControl.setErrors({ cepNaoEncontrado: true });
+              this._snackBar.open('CEP não encontrado.', '', { duration: 5000 });
+              return;
+            }
+
+            this.form.patchValue(
+              {
+                cep: endereco.cep.replace(/\D/g, ''),
+                logradouro: endereco.logradouro,
+                bairro: endereco.bairro,
+                cidade: endereco.localidade,
+                uf: endereco.uf,
+                complemento: endereco.complemento,
+              },
+              { emitEvent: false }
+            );
+          })
+      );
     }
   }
 
-  private loadMunicipalities() {
-    this.loadingMunicipalities = true;
-    this.locationService.getMunicipalities().subscribe({
-      next: (municipalities) => {
-        this.municipalities = municipalities;
-        this.loadingMunicipalities = false;
-      },
-      error: (error) => {
-        console.error('Não foi possível carregar os municípios.', error);
-        this.loadingMunicipalities = false;
-        this.municipalityLoadError = true;
-        if (this.lastZipCodeAddress) {
-          this.form.patchValue({ cidade: this.lastZipCodeAddress.localidade });
-        }
-      },
-    });
-  }
-
-  onMunicipalitySelected(id: string) {
-    const municipality = this.municipalities.find(
-      (item) => item.id === Number(id)
-    );
-    if (municipality) {
-      this.form.patchValue({ uf: municipality.state });
-    }
-  }
-
-  private setupZipCodeLookup() {
-    this.form.controls.cep.valueChanges
-      .pipe(
-        map((zipCode) => String(zipCode || '').replace(/\D/g, '')),
-        debounceTime(400),
-        distinctUntilChanged(),
-        switchMap((zipCode) => {
-          if (zipCode.length !== 8) {
-            return of(null);
-          }
-
-          return this.locationService.getAddressByZipCode(zipCode).pipe(
-            catchError((error) => {
-              console.error('Não foi possível consultar o CEP.', error);
-              this.onError('Não foi possível consultar o CEP.');
-              return of(null);
-            })
-          );
-        })
-      )
-      .subscribe((address) => {
-        if (!address) {
-          return;
-        }
-
-        if (address.erro) {
-          this.onError('CEP não encontrado.');
-          return;
-        }
-
-        this.lastZipCodeAddress = address;
-        this.form.patchValue({
-          logradouro: address.logradouro || '',
-          bairro: address.bairro || '',
-          complemento: address.complemento || '',
-          cidade: this.municipalityLoadError
-            ? address.localidade
-            : address.ibge,
-          uf: address.uf || '',
-        });
-      });
-  }
-
-  private submit(request: ReturnType<PatientService['save']>, message: string) {
-    request.subscribe({
-      next: (result) => {
-        console.log('Sucesso:', result);
-        this._snackBar.open(message, '', { duration: 3000 });
-        this.router.navigate(['/patient']);
-      },
-      error: (error) => {
-        const apiMessage = this.getApiErrorMessage(error);
-        this.onError(
-          apiMessage
-            ? `Não foi possível salvar: ${apiMessage}`
-            : 'Erro ao salvar o paciente. Por favor, tente novamente.',
-          error
-        );
-      },
-    });
-  }
-
-  private getApiErrorMessage(error: any): string {
-    const response = error?.error;
-
-    if (Array.isArray(response)) {
-      return response
-        .map((item) => `${item.campo || 'Campo'}: ${item.mensagem}`)
-        .join('; ');
-    }
-
-    if (typeof response === 'string') {
-      return response;
-    }
-
-    return response?.message || error?.message || '';
-  }
-
-  private loadPatient(id: number, hasFallbackData = false) {
-    this.service.findById(id).subscribe({
-      next: (patient) => this.fillForm(patient),
-      error: (error) => {
-        if (!hasFallbackData) {
-          this.onError('Não foi possível carregar o paciente.', error);
-        } else {
-          console.error(
-            'Não foi possível carregar os detalhes do paciente.',
-            error
-          );
-        }
-      },
-    });
-  }
-
-  private fillForm(patient: Patient) {
-    this.form.patchValue({
-      dataNascimento: patient.dataNascimento
-        ? new Date(patient.dataNascimento)
-        : ('' as any),
-      nomeResponsavel: patient.responsavel?.nomeResponsavel || '',
-      cpfResponsavel: patient.responsavel?.cpfResponsavel || '',
-      nome: patient.nome || '',
-      cpf: patient.cpf || '',
-      profissao: patient.profissao || '',
-      telefone: patient.telefone || patient.contato?.telefone || '',
-      email: patient.email || patient.contato?.email || '',
-      logradouro: patient.endereco?.logradouro || '',
-      bairro: patient.endereco?.bairro || '',
-      cep: patient.endereco?.cep || '',
-      numero: patient.endereco?.numero || '',
-      complemento: patient.endereco?.complemento || '',
-      cidade: patient.endereco?.cidade || '',
-      uf: patient.endereco?.uf || '',
-    });
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

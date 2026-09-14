@@ -1,4 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+export interface EvolutionDialogData {
+  prontuario: string;
+  paciente: string;
+  evolucao: string;
+}
 
 @Component({
   selector: 'app-modal',
@@ -6,5 +13,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent {
-
+  constructor(@Inject(MAT_DIALOG_DATA) public data: EvolutionDialogData) {}
 }

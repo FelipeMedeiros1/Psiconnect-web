@@ -1,0 +1,10 @@
+<mat-card><mat-card-content><form [formGroup]="form" class="location-form">
+  <mat-form-field><mat-label>Nome do local</mat-label><input matInput formControlName="nomeLugar"><mat-error>Informe o nome do local.</mat-error></mat-form-field>
+  <mat-form-field><mat-label>CEP</mat-label><input matInput formControlName="cep" maxlength="9"><mat-hint *ngIf="buscandoCep">Buscando endereço...</mat-hint><mat-error *ngIf="form.controls.cep.hasError('cepNaoEncontrado')">CEP não encontrado.</mat-error><mat-error *ngIf="form.controls.cep.hasError('pattern')">Informe um CEP válido.</mat-error></mat-form-field>
+  <mat-form-field><mat-label>Logradouro</mat-label><input matInput formControlName="logradouro"></mat-form-field>
+  <mat-form-field><mat-label>Número</mat-label><input matInput formControlName="numero"></mat-form-field>
+  <mat-form-field><mat-label>Complemento</mat-label><input matInput formControlName="complemento"></mat-form-field>
+  <mat-form-field><mat-label>Bairro</mat-label><input matInput formControlName="bairro"></mat-form-field>
+  <mat-form-field><mat-label>Cidade</mat-label><input matInput formControlName="cidade"></mat-form-field>
+  <mat-form-field><mat-label>UF</mat-label><input matInput formControlName="uf"></mat-form-field>
+</form></mat-card-content><mat-card-actions><button mat-raised-button color="primary" (click)="save()">{{id?'Atualizar':'Salvar'}}</button><button mat-button (click)="cancel()">Cancelar</button></mat-card-actions></mat-card>

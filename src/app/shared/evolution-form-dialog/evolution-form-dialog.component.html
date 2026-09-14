@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content>
+  <p><strong>Paciente:</strong> {{ data.patient }}</p>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Evolução do atendimento</mat-label>
+    <textarea matInput rows="10" [formControl]="evolution" [attr.maxlength]="maxLength"
+      placeholder="1º parágrafo: evolução observada durante o atendimento.&#10;&#10;2º parágrafo: conduta, orientações e plano para o próximo atendimento."></textarea>
+    <mat-hint>Use parágrafos separados para evolução e conduta/plano.</mat-hint>
+    <mat-hint align="end">{{ evolution.value.length }} / {{ maxLength }}</mat-hint>
+    <mat-error *ngIf="evolution.hasError('required')">A evolução é obrigatória.</mat-error>
+    <mat-error *ngIf="evolution.hasError('maxlength')">A evolução deve ter no máximo 600 caracteres.</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="evolution.invalid">Salvar evolução</button>
+</mat-dialog-actions>

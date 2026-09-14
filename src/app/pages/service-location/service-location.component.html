@@ -1,0 +1,7 @@
+<mat-table *ngIf="locations$ | async as locations" [dataSource]="locations" class="mat-elevation-z8">
+  <ng-container matColumnDef="nome"><mat-header-cell *matHeaderCellDef>Local</mat-header-cell><mat-cell *matCellDef="let item">{{item.nomeLugar}}</mat-cell></ng-container>
+  <ng-container matColumnDef="endereco"><mat-header-cell *matHeaderCellDef>Endereço</mat-header-cell><mat-cell *matCellDef="let item">{{address(item)}}</mat-cell></ng-container>
+  <ng-container matColumnDef="status"><mat-header-cell *matHeaderCellDef>Status</mat-header-cell><mat-cell *matCellDef="let item">{{item.ativo?'Ativo':'Inativo'}}</mat-cell></ng-container>
+  <ng-container matColumnDef="acoes"><mat-header-cell *matHeaderCellDef><button mat-icon-button (click)="add()" matTooltip="Cadastrar novo local"><mat-icon>add</mat-icon></button></mat-header-cell><mat-cell *matCellDef="let item"><button mat-icon-button (click)="edit(item)"><mat-icon>edit</mat-icon></button><button mat-icon-button [disabled]="!item.ativo" (click)="deactivate(item)"><mat-icon>delete</mat-icon></button></mat-cell></ng-container>
+  <mat-header-row *matHeaderRowDef="columns"></mat-header-row><mat-row *matRowDef="let row; columns: columns"></mat-row>
+</mat-table>

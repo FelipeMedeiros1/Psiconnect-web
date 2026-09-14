@@ -2,16 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Patient } from '../model/patient';
 import { delay, first, map, Observable, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PatientService {
   //private readonly API = '/assets/patient.json';
-  private readonly API = environment.apiUrl
-    ? `${environment.apiUrl}/pacientes`
-    : '/pacientes';
+  private readonly API = '/pacientes';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -20,7 +17,9 @@ export class PatientService {
       first(),
       delay(500),
       tap((response) => console.log(response)),
-      map((response: { content: any }) => response.content)
+      map((response: { content: Patient[] }) => response.content.sort(
+        (first, second) => (second.id ?? 0) - (first.id ?? 0)
+      ))
     );
   }
 
@@ -33,9 +32,15 @@ export class PatientService {
     return this.httpClient.get<Patient>(`${this.API}/${id}`).pipe(first());
   }
 
-  update(id: number, record: Partial<Patient>): Observable<Patient> {
-    return this.httpClient
-      .put<Patient>(`${this.API}/${id}`, { ...record, id })
-      .pipe(first());
+  update(id: number, record: object): Observable<Patient> {
+    return this.httpClient.put<Patient>(`${this.API}/${id}`, { id, ...record }).pipe(first());
+  }
+
+  deactivate(id: number, motivoAlta: string): Observable<void> {
+    return this.httpClient.put<void>(`${this.API}/alta`, { id, motivoAlta }).pipe(first());
+  }
+
+  associateLocation(id: number, localAtendimentoId: number | null): Observable<Patient> {
+    return this.httpClient.put<Patient>(`${this.API}/${id}/local-atendimento`, { localAtendimentoId }).pipe(first());
   }
 }

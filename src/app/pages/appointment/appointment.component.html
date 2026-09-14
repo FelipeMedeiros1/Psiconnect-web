@@ -1,1 +1,21 @@
-<p>colocar lógica agendamento da consulta</p>
+<mat-table *ngIf="sessions$ | async as sessions" [dataSource]="sessions" class="mat-elevation-z8">
+  <ng-container matColumnDef="data"><mat-header-cell *matHeaderCellDef>Data - Hora</mat-header-cell><mat-cell *matCellDef="let item">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</mat-cell></ng-container>
+  <ng-container matColumnDef="psicologo"><mat-header-cell *matHeaderCellDef>Psicólogo</mat-header-cell><mat-cell *matCellDef="let item">{{ item.psicologo }}</mat-cell></ng-container>
+  <ng-container matColumnDef="paciente"><mat-header-cell *matHeaderCellDef>Paciente</mat-header-cell><mat-cell *matCellDef="let item">{{ item.paciente }}</mat-cell></ng-container>
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef><button mat-icon-button (click)="onAdd()" aria-label="Novo agendamento" matTooltip="Criar novo agendamento"><mat-icon>add</mat-icon></button></mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <ng-container *ngIf="!item.compareceu; else completedActions">
+        <button mat-icon-button (click)="onConfirmAttendance(item)" aria-label="Confirmar atendimento realizado"><mat-icon>task_alt</mat-icon></button>
+        <button mat-icon-button (click)="onEdit(item)" aria-label="Editar consulta"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button (click)="onDelete(item)" aria-label="Excluir consulta"><mat-icon>delete</mat-icon></button>
+      </ng-container>
+      <ng-template #completedActions>
+        <mat-icon class="completed-icon" aria-label="Atendimento concluído" title="Atendimento concluído">check_circle</mat-icon>
+        <button mat-icon-button (click)="onEditEvolution(item)" aria-label="Editar evolução"><mat-icon>edit</mat-icon></button>
+      </ng-template>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
