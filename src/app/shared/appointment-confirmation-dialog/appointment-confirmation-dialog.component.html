@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Confirmar agendamento</h2>
+<mat-dialog-content>
+  <p><strong>Nº PR:</strong> {{ data.numeroProntuario }}</p>
+  <p><strong>Paciente:</strong> {{ data.paciente }}</p>
+  <p><strong>Data e hora:</strong> {{ data.data | date:'dd/MM/yyyy HH:mm' }}</p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancelar</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true">Confirmar</button>
+</mat-dialog-actions>

@@ -1,5 +1,6 @@
 export interface Patient {
   id?: number;
+  numeroProntuario?: string;
   status?: boolean;
   localAtendimento?: { id: number; nomeLugar: string } | null;
   email?: string;
@@ -25,4 +26,12 @@ export interface Patient {
     cidade: string;
     uf: string;
   };
+}
+
+export interface DischargeHistory {
+  pacienteId: number;
+  paciente: string;
+  data: string;
+  usuario: string;
+  motivo: string;
 }

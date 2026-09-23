@@ -10,7 +10,7 @@ import { SearchService } from 'src/app/services/search.service';
   styleUrls: ['./psychologist.component.scss']
 })
 export class PsychologistComponent {
-  readonly displayedColumns = ['id', 'ativo', 'nome', 'crp', 'especialidade', 'email', 'actions'];
+  readonly displayedColumns = ['crp', 'ativo', 'nome', 'especialidade', 'email', 'actions'];
   psychologists$: Observable<Psychologist[]>;
 
   constructor(private service: PsychologistService, private router: Router, private search: SearchService) {
@@ -28,6 +28,13 @@ export class PsychologistComponent {
   onDeactivate(psychologist: Psychologist): void {
     if (!psychologist.ativo || !window.confirm(`Inativar o psicólogo ${psychologist.nome}?`)) return;
     this.service.deactivate(psychologist.id).subscribe({
+      next: () => (this.psychologists$ = this.load()),
+    });
+  }
+
+  onReactivate(psychologist: Psychologist): void {
+    if (psychologist.ativo || !window.confirm(`Reativar o psicólogo ${psychologist.nome}?`)) return;
+    this.service.reactivate(psychologist.id).subscribe({
       next: () => (this.psychologists$ = this.load()),
     });
   }

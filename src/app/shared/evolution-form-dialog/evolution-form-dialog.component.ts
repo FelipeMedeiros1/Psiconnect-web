@@ -14,7 +14,7 @@ export interface EvolutionFormDialogData {
   styleUrls: ['./evolution-form-dialog.component.scss'],
 })
 export class EvolutionFormDialogComponent {
-  readonly maxLength = 600;
+  readonly maxLength = 500;
   readonly evolution = new FormControl(this.data.evolution ?? '', {
     nonNullable: true,
     validators: [Validators.required, Validators.maxLength(this.maxLength)],

@@ -46,3 +46,46 @@
     text-align: right;
   }
 }
+.history-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.history-table-wrapper mat-table { min-width: 860px; }
+.discharge-history { margin-top: 20px; }
+.discharge-list { display: grid; gap: 12px; margin-top: 12px; }
+.discharge-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+.discharge-item > mat-icon { flex: 0 0 24px; color: #1976d2; }
+.discharge-data { min-width: 0; flex: 1; line-height: 1.5; overflow-wrap: anywhere; }
+.discharge-data > div:first-of-type { font-size: 14px; }
+.discharge-data > div:last-of-type { margin-top: 6px; color: #616161; white-space: pre-wrap; }
+
+@media (max-width: 599px) {
+  .history-filters { align-items: stretch; gap: 8px; }
+  .history-filters mat-form-field,
+  .history-filters .print-button { width: 100%; }
+  .history-summary { flex-direction: column; gap: 6px; }
+  .discharge-item { padding: 12px; }
+}
+
+.history-filters mat-form-field {
+  width: 212px;
+}
+
+.period-filter,
+.period-filter input {
+  cursor: pointer;
+}
+@media (max-width: 599px) {
+  .history-filters mat-form-field {
+    width: 100%;
+  }
+}

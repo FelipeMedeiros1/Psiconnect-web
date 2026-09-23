@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Patient } from '../model/patient';
+import { DischargeHistory, Patient } from '../model/patient';
 import { delay, first, map, Observable, tap } from 'rxjs';
 
 @Injectable({
@@ -37,7 +37,18 @@ export class PatientService {
   }
 
   deactivate(id: number, motivoAlta: string): Observable<void> {
-    return this.httpClient.put<void>(`${this.API}/alta`, { id, motivoAlta }).pipe(first());
+    return this.discharge(id, motivoAlta);
+  }
+
+  discharge(id: number, motivo: string): Observable<void> {
+    return this.httpClient.put<void>(`${this.API}/${id}/alta`, { motivo, usuario: 'Sistema' }).pipe(first());
+  }
+
+  reactivate(id: number): Observable<void> {
+    return this.httpClient.put<void>(`${this.API}/${id}/reativar`, {}).pipe(first());
+  }
+  dischargeHistory(): Observable<DischargeHistory[]> {
+    return this.httpClient.get<DischargeHistory[]>(`${this.API}/altas`).pipe(first());
   }
 
   associateLocation(id: number, localAtendimentoId: number | null): Observable<Patient> {

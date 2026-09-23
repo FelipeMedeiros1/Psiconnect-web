@@ -7,6 +7,7 @@ export interface Session {
   data: string;
   psicologo: string;
   paciente: string;
+  prontuarioPaciente?: string;
   idPsicologo?: number;
   idPaciente?: number;
   valorSessao?: number;
@@ -21,8 +22,10 @@ export interface AttendanceHistory {
   psicologoId: number;
   paciente: string;
   pacienteId: number;
+  pacienteAtivo: boolean;
   valorSessao: number;
   historico: string;
+  evolucao: string;
 }
 
 export interface SessionRegistration {
@@ -78,7 +81,7 @@ export class SessionService {
   }
 
   history(): Observable<AttendanceHistory[]> {
-    return this.http.get<{ content: AttendanceHistory[] }>(`${this.api}/historico`).pipe(
+    return this.http.get<{ content: AttendanceHistory[] }>(`${this.api}/historico?size=10000`).pipe(
       map((response) => response.content.sort(
         (first, second) => new Date(second.data).getTime() - new Date(first.data).getTime()
       ))

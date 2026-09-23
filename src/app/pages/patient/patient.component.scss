@@ -14,6 +14,7 @@
 
 mat-table {
   width: 100%;
+  min-width: 680px;
 }
 
 .add-patient {
@@ -41,8 +42,13 @@ mat-table {
 }
 
 .mat-column-actions {
-  flex: 0 0 100px;
+  flex: 0 0 152px;
   justify-content: center;
+  white-space: nowrap;
+}
+
+.mat-column-actions button {
+  flex: 0 0 40px;
 }
 
 .data-row {
@@ -99,7 +105,7 @@ mat-table {
   }
 
   .mat-column-actions {
-    flex-basis: 76px;
+    flex-basis: 132px;
   }
 
   .mat-column-actions button {

@@ -6,7 +6,7 @@
           <mat-label>Paciente</mat-label>
           <mat-select formControlName="idPaciente">
             <mat-option *ngFor="let patient of patients" [value]="patient.id">
-              {{ patient.nome }} — {{ patient.cpf }}
+              {{ patient.numeroProntuario }} — {{ patient.nome }}
             </mat-option>
           </mat-select>
           <mat-error>Selecione o paciente.</mat-error>
@@ -17,7 +17,7 @@
           <mat-select formControlName="idPsicologo">
             <mat-option [value]="0">Selecionar automaticamente</mat-option>
             <mat-option *ngFor="let psychologist of psychologists" [value]="psychologist.id">
-              {{ psychologist.nome }} — {{ psychologist.crp }}
+              {{ psychologist.nome }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -34,7 +34,8 @@
 
         <mat-form-field class="full-width">
           <mat-label>Data da consulta</mat-label>
-          <input matInput [matDatepicker]="appointmentPicker" formControlName="dataConsulta" [min]="minimumDate" (dateChange)="onDateChanged()" />
+          <input matInput [matDatepicker]="appointmentPicker" formControlName="dataConsulta" [min]="minimumDate"
+                 readonly (click)="appointmentPicker.open()" (dateChange)="onDateChanged()" />
           <mat-datepicker-toggle matSuffix [for]="appointmentPicker"></mat-datepicker-toggle>
           <mat-datepicker #appointmentPicker></mat-datepicker>
           <mat-error *ngIf="form.controls.dataConsulta.hasError('pastDate') || form.controls.dataConsulta.hasError('matDatepickerMin')">A data não pode ser anterior à data atual.</mat-error>
@@ -54,17 +55,22 @@
 
         <mat-form-field class="full-width">
           <mat-label>Valor da sessão</mat-label>
-          <input matInput type="number" min="0.01" step="0.01" formControlName="valorSessao" (focus)="selectValue($event)" />
+          <input matInput type="text" inputmode="decimal" autocomplete="off" formControlName="valorSessao"
+                 placeholder="450,00" (focus)="selectValue($event)" (blur)="formatSessionValue()" />
           <span matPrefix>R$&nbsp;</span>
           <mat-error>Informe um valor maior que zero.</mat-error>
         </mat-form-field>
       </div>
 
+
       <mat-card-actions>
-        <button mat-raised-button color="primary" type="submit" [disabled]="loading || saving">
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading || saving || confirming">
           {{ saving ? 'Salvando...' : (editId ? 'Atualizar' : 'Agendar') }}
         </button>
         <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+        <mat-checkbox *ngIf="!editId" [formControl]="continueScheduling" class="continue-scheduling">
+          Continuar agendando
+        </mat-checkbox>
       </mat-card-actions>
     </form>
   </mat-card-content>

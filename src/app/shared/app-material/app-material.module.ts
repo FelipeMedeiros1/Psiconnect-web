@@ -17,6 +17,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { AppComponent } from 'src/app/app.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [],
@@ -38,6 +40,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatNativeDateModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatCheckboxModule,
+    MatPaginatorModule,
   ],
   bootstrap: [AppComponent],
 })

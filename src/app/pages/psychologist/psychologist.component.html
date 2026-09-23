@@ -1,5 +1,4 @@
 <mat-table *ngIf="psychologists$ | async as psychologists" [dataSource]="psychologists" class="mat-elevation-z8">
-  <ng-container matColumnDef="id"><mat-header-cell *matHeaderCellDef>ID</mat-header-cell><mat-cell *matCellDef="let item">{{ item.id }}</mat-cell></ng-container>
   <ng-container matColumnDef="ativo"><mat-header-cell *matHeaderCellDef>Status</mat-header-cell><mat-cell *matCellDef="let item">{{ item.ativo ? 'Ativo' : 'Inativo' }}</mat-cell></ng-container>
   <ng-container matColumnDef="nome"><mat-header-cell *matHeaderCellDef>Nome</mat-header-cell><mat-cell *matCellDef="let item">{{ item.nome }}</mat-cell></ng-container>
   <ng-container matColumnDef="crp"><mat-header-cell *matHeaderCellDef>CRP</mat-header-cell><mat-cell *matCellDef="let item">{{ item.crp }}</mat-cell></ng-container>
@@ -8,8 +7,19 @@
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef><button mat-icon-button (click)="onAdd()" aria-label="Cadastrar psicólogo" matTooltip="Cadastrar novo psicólogo"><mat-icon>add</mat-icon></button></mat-header-cell>
     <mat-cell *matCellDef="let item">
-      <button mat-icon-button (click)="onEdit(item)" aria-label="Editar psicólogo"><mat-icon>edit</mat-icon></button>
-      <button mat-icon-button (click)="onDeactivate(item)" [disabled]="!item.ativo" aria-label="Inativar psicólogo"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button (click)="onEdit(item)" aria-label="Editar psicólogo"
+              [disabled]="!item.ativo"
+              [matTooltip]="item.ativo ? 'Editar psicólogo' : 'Reative o psicólogo para editar'">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onDeactivate(item)" *ngIf="item.ativo"
+              aria-label="Inativar psicólogo" matTooltip="Inativar psicólogo">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="onReactivate(item)" *ngIf="!item.ativo"
+              aria-label="Reativar psicólogo" matTooltip="Reativar psicólogo">
+        <mat-icon>restore</mat-icon>
+      </button>
     </mat-cell>
   </ng-container>
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

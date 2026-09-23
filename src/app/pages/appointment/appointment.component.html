@@ -1,5 +1,7 @@
-<mat-table *ngIf="sessions$ | async as sessions" [dataSource]="sessions" class="mat-elevation-z8">
-  <ng-container matColumnDef="data"><mat-header-cell *matHeaderCellDef>Data - Hora</mat-header-cell><mat-cell *matCellDef="let item">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</mat-cell></ng-container>
+<div class="appointment-table-wrapper" *ngIf="sessions$ | async as sessions">
+<mat-table [dataSource]="sessions" class="mat-elevation-z8">
+  <ng-container matColumnDef="data"><mat-header-cell *matHeaderCellDef>Data e Hora</mat-header-cell><mat-cell *matCellDef="let item">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</mat-cell></ng-container>
+  <ng-container matColumnDef="prontuario"><mat-header-cell *matHeaderCellDef>Nº Prontuário</mat-header-cell><mat-cell *matCellDef="let item">{{ prontuario(item) }}</mat-cell></ng-container>
   <ng-container matColumnDef="psicologo"><mat-header-cell *matHeaderCellDef>Psicólogo</mat-header-cell><mat-cell *matCellDef="let item">{{ item.psicologo }}</mat-cell></ng-container>
   <ng-container matColumnDef="paciente"><mat-header-cell *matHeaderCellDef>Paciente</mat-header-cell><mat-cell *matCellDef="let item">{{ item.paciente }}</mat-cell></ng-container>
   <ng-container matColumnDef="actions">
@@ -19,3 +21,4 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 </mat-table>
+</div>

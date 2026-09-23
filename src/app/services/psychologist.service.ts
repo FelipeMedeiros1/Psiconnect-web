@@ -55,4 +55,8 @@ export class PsychologistService {
   deactivate(id: number): Observable<void> {
     return this.http.put<void>(`${this.api}/${id}/desativar`, {});
   }
+
+  reactivate(id: number): Observable<void> {
+    return this.http.put<void>(`${this.api}/${id}/reativar`, {});
+  }
 }

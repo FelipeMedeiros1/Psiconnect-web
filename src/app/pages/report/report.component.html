@@ -22,6 +22,15 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <mat-form-field appearance="outline" class="period-filter" floatLabel="always" (click)="periodPicker.open()">
+      <mat-label>Período</mat-label>
+      <mat-date-range-input [rangePicker]="periodPicker">
+        <input matStartDate [formControl]="startDateControl" placeholder="Início" readonly>
+        <input matEndDate [formControl]="endDateControl" placeholder="Fim" readonly>
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="periodPicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #periodPicker></mat-date-range-picker>
+    </mat-form-field>
     <button mat-raised-button color="primary" class="print-button" (click)="gerarRelatorio()">
       <mat-icon>description</mat-icon> Histórico de consultas
     </button>
@@ -29,10 +38,10 @@
 
     <div class="history-summary" *ngIf="summary$ | async as summary">
       <span><strong>Atendimentos realizados:</strong> {{ summary.quantidade }}</span>
-      <span><strong>Valor total:</strong> {{ summary.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</span>
     </div>
 
-    <mat-table *ngIf="history$ | async as history" [dataSource]="history" class="mat-elevation-z8">
+    <div class="history-table-wrapper" *ngIf="pagedHistory$ | async as history">
+    <mat-table [dataSource]="history" class="mat-elevation-z8">
       <ng-container matColumnDef="data">
         <mat-header-cell *matHeaderCellDef>Data - Hora</mat-header-cell>
         <mat-cell *matCellDef="let item">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</mat-cell>
@@ -57,7 +66,10 @@
       <ng-container matColumnDef="acoes">
         <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
         <mat-cell *matCellDef="let item">
-          <button mat-stroked-button color="primary" (click)="repetirAtendimento(item)" aria-label="Repetir atendimento">
+          <button mat-stroked-button color="primary" (click)="repetirAtendimento(item)"
+                  [disabled]="!item.pacienteAtivo"
+                  [matTooltip]="item.pacienteAtivo ? 'Repetir atendimento' : 'Reative o paciente para agendar novamente'"
+                  aria-label="Repetir atendimento">
             <mat-icon>event_repeat</mat-icon>
             Repetir atendimento
           </button>
@@ -66,6 +78,27 @@
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     </mat-table>
+    <mat-paginator *ngIf="visibleHistoryCount$ | async as total"
+      [length]="total" [pageSize]="historyPageSize" [hidePageSize]="true"
+      (page)="onHistoryPage($event)" aria-label="Paginação do histórico">
+    </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="discharge-history" *ngIf="discharges$ | async as discharges">
+  <mat-card-header><mat-card-title>Histórico de altas</mat-card-title></mat-card-header>
+  <mat-card-content>
+    <p *ngIf="!discharges.length">Nenhuma alta registrada.</p>
+    <div class="discharge-list" *ngIf="discharges.length">
+      <article class="discharge-item" *ngFor="let item of discharges">
+        <mat-icon aria-hidden="true">assignment_turned_in</mat-icon>
+        <div class="discharge-data">
+        <div matLine><strong>{{ item.paciente }}</strong> — {{ item.data | date:'dd/MM/yyyy HH:mm' }}</div>
+        <div matLine>{{ item.motivo }} (registrado por {{ item.usuario }})</div>
+        </div>
+      </article>
+    </div>
   </mat-card-content>
 </mat-card>
 
@@ -87,6 +120,6 @@
 
   <div class="report-totals" *ngIf="summary$ | async as summary">
     <p><strong>Consultas realizadas:</strong> {{ summary.quantidade }}</p>
-    <p><strong>Valor total a pagar:</strong> {{ summary.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</p>
+    <p><strong>Valor total:</strong> {{ summary.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</p>
   </div>
 </section>

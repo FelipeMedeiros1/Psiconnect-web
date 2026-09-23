@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Dar alta ao paciente</h2>
+<mat-dialog-content>
+  <p><strong>Paciente:</strong> {{ data.paciente }}</p>
+  <mat-form-field appearance="outline">
+    <mat-label>Motivo da alta</mat-label>
+    <textarea matInput rows="7" maxlength="600" [formControl]="motivo"></textarea>
+    <mat-hint align="end">{{ motivo.value.length }} / 600</mat-hint>
+    <mat-error *ngIf="motivo.hasError('required')">Informe o motivo da alta.</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" (click)="salvar()">Confirmar alta</button>
+</mat-dialog-actions>

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchService } from '../services/search.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-consultation-menu',
@@ -9,8 +11,15 @@ import { SearchService } from '../services/search.service';
 })
 export class ConsultationMenuComponent {
   pageTitle: string = 'Agenda';
+  isHandset = false;
 
-  constructor(private router: Router, private searchService: SearchService) {}
+  get showSearch(): boolean {
+    return !/^\/appointment\/include(?:\/|\?|$)/.test(this.router.url);
+  }
+
+  constructor(private router: Router, private searchService: SearchService, breakpoint: BreakpointObserver) {
+    breakpoint.observe([Breakpoints.Handset]).subscribe(result => this.isHandset = result.matches);
+  }
 
   onSearch(value: string): void {
     this.searchService.setQuery(value);
@@ -25,6 +34,10 @@ export class ConsultationMenuComponent {
 
   updateTitle(title: string) {
     this.pageTitle = title;
+  }
+
+  closeOnMobile(sidenav: MatSidenav): void {
+    if (this.isHandset) sidenav.close();
   }
 
   private updateTitleBasedOnRoute(route: string) {

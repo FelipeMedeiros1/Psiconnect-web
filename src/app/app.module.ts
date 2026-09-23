@@ -20,10 +20,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ConsultationMenuComponent } from './consultation-menu/consultation-menu.component';
 import { PsychologistFormComponent } from './pages/psychologist-form/psychologist-form.component';
 import { AppointmentFormComponent } from './pages/appointment-form/appointment-form.component';
+import { AppointmentConfirmationDialogComponent } from './shared/appointment-confirmation-dialog/appointment-confirmation-dialog.component';
 import { TimePickerDialogComponent } from './shared/time-picker-dialog/time-picker-dialog.component';
 import { EvolutionFormDialogComponent } from './shared/evolution-form-dialog/evolution-form-dialog.component';
 import { ServiceLocationComponent } from './pages/service-location/service-location.component';
 import { ServiceLocationFormComponent } from './pages/service-location-form/service-location-form.component';
+import { DischargeDialogComponent } from './shared/discharge-dialog/discharge-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,10 +44,12 @@ import { ServiceLocationFormComponent } from './pages/service-location-form/serv
     ConsultationMenuComponent,
     PsychologistFormComponent,
     AppointmentFormComponent,
+    AppointmentConfirmationDialogComponent,
     TimePickerDialogComponent,
     EvolutionFormDialogComponent,
     ServiceLocationComponent,
     ServiceLocationFormComponent,
+    DischargeDialogComponent,
   ],
   imports: [
     BrowserModule,

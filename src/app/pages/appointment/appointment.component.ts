@@ -12,7 +12,7 @@ import { SearchService } from 'src/app/services/search.service';
   styleUrls: ['./appointment.component.scss']
 })
 export class AppointmentComponent {
-  readonly displayedColumns = ['data', 'psicologo', 'paciente', 'actions'];
+  readonly displayedColumns = ['prontuario', 'paciente', 'psicologo', 'data', 'actions'];
   sessions$: Observable<Session[]>;
 
   constructor(private service: SessionService, private router: Router, private dialog: MatDialog, private search: SearchService) {
@@ -65,13 +65,17 @@ export class AppointmentComponent {
     return session.compareceu && Date.now() <= new Date(session.data).getTime() + 7 * 24 * 60 * 60 * 1000;
   }
 
+  prontuario(session: Session): string {
+    return session.prontuarioPaciente?.split(/\r?\n/, 1)[0].trim() || '-';
+  }
+
   private load(): Observable<Session[]> {
     return combineLatest([
       this.service.list().pipe(catchError(() => of([]))),
       this.search.query$,
     ]).pipe(map(([sessions, query]) => sessions.filter((session) =>
       (!session.compareceu || this.canEditEvolution(session)) &&
-      this.search.matches(query, session.paciente, session.psicologo,
+      this.search.matches(query, session.paciente, session.psicologo, this.prontuario(session),
         new Date(session.data).toLocaleString('pt-BR'), session.compareceu ? 'concluído' : 'pendente')
     )));
   }

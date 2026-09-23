@@ -7,6 +7,20 @@ mat-card {
   width: 100%;
 }
 
+.continue-scheduling {
+  margin-left: 0.5rem;
+}
+
+:host ::ng-deep .continue-scheduling .mdc-label {
+  font-size: 10px;
+}
+
+mat-card-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

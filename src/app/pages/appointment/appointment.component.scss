@@ -3,3 +3,7 @@
   color: #2e7d32;
   vertical-align: middle;
 }
+
+.appointment-table-wrapper { width: 100%; overflow-x: auto; }
+.appointment-table-wrapper mat-table { min-width: 820px; }
+.mat-column-prontuario { flex: 0 0 130px; }

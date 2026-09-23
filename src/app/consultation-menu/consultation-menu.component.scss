@@ -55,7 +55,7 @@
   height: calc(100dvh - 58px);
 
   mat-sidenav {
-    width: 220px;
+    width: 250px;
   }
 
   mat-sidenav-content {
@@ -73,6 +73,7 @@
 
 @media (max-width: 599px) {
   .side-container {
+    mat-sidenav { width: min(86vw, 280px); }
     .page-toolbar {
       box-sizing: border-box;
       height: auto;

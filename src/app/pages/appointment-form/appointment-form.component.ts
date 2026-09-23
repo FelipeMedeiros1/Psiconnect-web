@@ -9,6 +9,7 @@ import { PatientService } from 'src/app/services/patient.service';
 import { Psychologist, PsychologistService } from 'src/app/services/psychologist.service';
 import { SessionRegistration, SessionService } from 'src/app/services/session.service';
 import { TimePickerDialogComponent } from 'src/app/shared/time-picker-dialog/time-picker-dialog.component';
+import { AppointmentConfirmationDialogComponent } from 'src/app/shared/appointment-confirmation-dialog/appointment-confirmation-dialog.component';
 
 @Component({
   selector: 'app-appointment-form',
@@ -21,6 +22,8 @@ export class AppointmentFormComponent implements OnInit {
   psychologists: Psychologist[] = [];
   loading = true;
   saving = false;
+  confirming = false;
+  readonly continueScheduling = this.formBuilder.control(false);
   editId: number | null = null;
   private originalPatientId: number | null = null;
   private originalPsychologistId: number | null = null;
@@ -32,7 +35,7 @@ export class AppointmentFormComponent implements OnInit {
     especialidade: [''],
     dataConsulta: [null as unknown as Date, Validators.required],
     horario: ['', Validators.required],
-    valorSessao: [0, [Validators.required, Validators.min(0.01)]],
+    valorSessao: ['', [Validators.required, Validators.pattern(/^(?=.*[1-9])\d+(?:,\d{1,2})?$/)]],
   });
 
   constructor(
@@ -74,6 +77,7 @@ export class AppointmentFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.saving || this.confirming) return;
     const data = this.form.getRawValue();
     const patientId = data.idPaciente || this.originalPatientId;
     const psychologistId = data.idPsicologo || this.originalPsychologistId;
@@ -121,20 +125,58 @@ export class AppointmentFormComponent implements OnInit {
       return;
     }
 
+    const sessionValue = this.parseCurrency(data.valorSessao);
+    if (!Number.isFinite(sessionValue) || sessionValue <= 0) {
+      this.form.controls.valorSessao.setErrors({ currency: true });
+      this.form.controls.valorSessao.markAsTouched();
+      this.snackBar.open('Informe um valor maior que zero.', '', { duration: 5000 });
+      return;
+    }
+
     const request: SessionRegistration = {
       idPaciente: patientId,
       idPsicologo: psychologistId,
       especialidade: psychologistId ? null : data.especialidade,
       data: sessionDate,
-      valorSessao: data.valorSessao,
+      valorSessao: sessionValue,
     };
 
+    if (!this.editId && this.continueScheduling.value) {
+      const patient = this.patients.find((item) => item.id === patientId);
+      if (!patient?.numeroProntuario) {
+        this.snackBar.open('Não foi possível identificar o prontuário do paciente.', '', { duration: 5000 });
+        return;
+      }
+      this.confirming = true;
+      this.dialog.open(AppointmentConfirmationDialogComponent, {
+        width: '440px',
+        disableClose: true,
+        data: { numeroProntuario: patient.numeroProntuario, paciente: patient.nome, data: sessionDate },
+      }).afterClosed().subscribe((confirmed: boolean | undefined) => {
+        this.confirming = false;
+        if (confirmed) this.save(request);
+      });
+      return;
+    }
+    this.save(request);
+  }
+
+  private save(request: SessionRegistration): void {
     this.saving = true;
     const saveRequest = this.editId
       ? this.sessionService.update(this.editId, request)
       : this.sessionService.schedule(request);
     saveRequest.subscribe({
       next: () => {
+        if (!this.editId && this.continueScheduling.value) {
+          this.form.controls.dataConsulta.reset();
+          this.form.controls.horario.reset();
+          this.form.markAsPristine();
+          this.form.markAsUntouched();
+          this.saving = false;
+          this.snackBar.open('Sessão agendada com sucesso!', '', { duration: 3000 });
+          return;
+        }
         this.snackBar.open('Sessão agendada com sucesso!', '', { duration: 3000 });
         this.router.navigate(['/appointment']);
       },
@@ -198,7 +240,7 @@ export class AppointmentFormComponent implements OnInit {
           idPsicologo: this.originalPsychologistId ?? 0,
           dataConsulta: date,
           horario: `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`,
-          valorSessao: session.valorSessao ?? 0,
+          valorSessao: this.formatCurrency(session.valorSessao ?? 0),
         });
       },
       error: () => this.snackBar.open('Não foi possível carregar a consulta.', '', { duration: 5000 }),
@@ -216,12 +258,30 @@ export class AppointmentFormComponent implements OnInit {
     this.form.patchValue({
       idPaciente: pacienteId,
       idPsicologo: psicologoId,
-      valorSessao: Number.isFinite(valorSessao) ? valorSessao : 0,
+      valorSessao: Number.isFinite(valorSessao) ? this.formatCurrency(valorSessao) : '',
       dataConsulta: null as unknown as Date,
       horario: '',
     });
   }
 
+  formatSessionValue(): void {
+    const value = this.parseCurrency(this.form.controls.valorSessao.value);
+    if (Number.isFinite(value) && value > 0) {
+      this.form.controls.valorSessao.setValue(this.formatCurrency(value));
+    }
+  }
+
+  private parseCurrency(value: string): number {
+    return Number(value.replace(/\./g, '').replace(',', '.'));
+  }
+
+  private formatCurrency(value: number): string {
+    return value.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      useGrouping: false,
+    });
+  }
   private combineDateAndTime(date: Date, time: string): string {
     const [hours, minutes] = time.split(':').map(Number);
     const localDate = new Date(date);

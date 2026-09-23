@@ -1,28 +1,28 @@
 <mat-sidenav-container class="side-container">
-  <mat-sidenav #sidenav mode="side" opened>
+  <mat-sidenav #sidenav [mode]="isHandset ? 'over' : 'side'" [opened]="!isHandset">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <h3 matSubheader>Atendimentos</h3>
-      <a mat-list-item (click)="updateTitle('Agenda')" routerLink="/appointment" routerLinkActive="active-link">
+      <a mat-list-item (click)="updateTitle('Agenda'); closeOnMobile(sidenav)" routerLink="/appointment" routerLinkActive="active-link">
         <mat-icon matListItemIcon>calendar_month</mat-icon>
         <span>Agenda</span>
       </a>
-      <a mat-list-item (click)="updateTitle('Histórico')" routerLink="/history" routerLinkActive="active-link">
+      <a mat-list-item (click)="updateTitle('Histórico'); closeOnMobile(sidenav)" routerLink="/history" routerLinkActive="active-link">
         <mat-icon matListItemIcon>history</mat-icon>
         <span>Histórico</span>
       </a>
 
       <mat-divider></mat-divider>
       <h3 matSubheader>Cadastros</h3>
-      <a mat-list-item (click)="updateTitle('Pacientes')" routerLink="/patient" routerLinkActive="active-link">
+      <a mat-list-item (click)="updateTitle('Pacientes'); closeOnMobile(sidenav)" routerLink="/patient" routerLinkActive="active-link">
         <mat-icon matListItemIcon>person</mat-icon>
         <span>Pacientes</span>
       </a>
-      <a mat-list-item (click)="updateTitle('Psicólogos')" routerLink="/psychologist" routerLinkActive="active-link">
+      <a mat-list-item (click)="updateTitle('Psicólogos'); closeOnMobile(sidenav)" routerLink="/psychologist" routerLinkActive="active-link">
         <mat-icon matListItemIcon>psychology</mat-icon>
         <span>Psicólogos</span>
       </a>
-      <a mat-list-item (click)="updateTitle('Locais de atendimento')" routerLink="/service-location" routerLinkActive="active-link">
+      <a mat-list-item (click)="updateTitle('Locais de atendimento'); closeOnMobile(sidenav)" routerLink="/service-location" routerLinkActive="active-link">
         <mat-icon matListItemIcon>place</mat-icon>
         <span>Locais de atendimento</span>
       </a>
@@ -36,7 +36,7 @@
       </button>
       <span class="spacer">{{ pageTitle }}</span>
 
-      <mat-form-field class="input-container" appearance="outline">
+      <mat-form-field class="input-container" appearance="outline" *ngIf="showSearch">
         <input matInput placeholder="Pesquisa" (input)="onSearch($any($event.target).value)" />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>

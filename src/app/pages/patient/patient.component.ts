@@ -6,6 +6,7 @@ import { Patient } from 'src/app/model/patient';
 import { PatientService } from 'src/app/services/patient.service';
 import { ErrorDialogComponent } from 'src/app/shared/error-dialog/error-dialog.component';
 import { SearchService } from 'src/app/services/search.service';
+import { DischargeDialogComponent } from 'src/app/shared/discharge-dialog/discharge-dialog.component';
 
 @Component({
   selector: 'app-patient',
@@ -67,6 +68,27 @@ export class PatientComponent implements OnInit {
     });
   }
 
+  onDischarge(patient: Patient): void {
+    if (!patient.id || !patient.status) return;
+    this.dialog.open(DischargeDialogComponent, {
+      width: '560px', data: { paciente: patient.nome },
+    }).afterClosed().subscribe((motivo?: string) => {
+      if (!motivo) return;
+      this.patientService.discharge(patient.id!, motivo).subscribe({
+        next: () => window.location.reload(),
+        error: () => this.onError('Não foi possível registrar a alta do paciente'),
+      });
+    });
+  }
+
+  onReactivate(patient: Patient): void {
+    if (!patient.id || patient.status) return;
+    if (!window.confirm(`Reativar ${patient.nome}?`)) return;
+    this.patientService.reactivate(patient.id).subscribe({
+      next: () => window.location.reload(),
+      error: () => this.onError('Não foi possível reativar o paciente'),
+    });
+  }
   toggleDetails(patient: Patient) {
     if (this.expandedPatient === patient) {
       this.expandedPatient = null;
