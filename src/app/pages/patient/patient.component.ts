@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { catchError, combineLatest, map, Observable, of } from 'rxjs';
+import { catchError, combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { Patient } from 'src/app/model/patient';
 import { PatientService } from 'src/app/services/patient.service';
 import { ErrorDialogComponent } from 'src/app/shared/error-dialog/error-dialog.component';
 import { SearchService } from 'src/app/services/search.service';
 import { DischargeDialogComponent } from 'src/app/shared/discharge-dialog/discharge-dialog.component';
+import { PatientDetailsDialogComponent } from 'src/app/shared/patient-details-dialog/patient-details-dialog.component';
 
 @Component({
   selector: 'app-patient',
@@ -20,7 +22,8 @@ export class PatientComponent implements OnInit {
   loadingDetails = new Set<number>();
   detailErrors = new Set<number>();
 
-  displayedColumns = ['id', 'status', 'nome', 'email', 'cpf', 'actions'];
+  displayedColumns = ['id', 'nome', 'telefone', 'actions'];
+  readonly statusControl = new FormControl<'ativos' | 'inativos' | 'todos'>('ativos', { nonNullable: true });
 
   constructor(
     private patientService: PatientService,
@@ -34,9 +37,11 @@ export class PatientComponent implements OnInit {
         return of([]);
       })),
       this.search.query$,
-    ]).pipe(map(([patients, query]) => patients.filter((patient) =>
+      this.statusControl.valueChanges.pipe(startWith('ativos' as const)),
+    ]).pipe(map(([patients, query, status]) => patients.filter((patient) =>
+      (status === 'todos' || (status === 'ativos' ? patient.status === true : patient.status === false)) &&
       this.search.matches(query, patient.id, patient.nome, patient.cpf,
-        patient.email, patient.contato?.email, patient.telefone, patient.contato?.telefone,
+        patient.email, patient.contato?.email, patient.telefone, patient.contato?.telefone, patient.idade,
         patient.profissao, patient.status ? 'ativo' : 'inativo')
     )));
   }
@@ -53,6 +58,26 @@ export class PatientComponent implements OnInit {
     this.router.navigate(['patient/include']);
   }
 
+
+  onView(patient: Patient): void {
+    if (patient.id == null) {
+      this.openPatientDetails(patient);
+      return;
+    }
+
+    this.patientService.findById(patient.id).subscribe({
+      next: (details) => this.openPatientDetails({ ...patient, ...details, idade: patient.idade }),
+      error: () => this.onError('Não foi possível carregar as informações do paciente'),
+    });
+  }
+
+  private openPatientDetails(patient: Patient): void {
+    this.dialog.open(PatientDetailsDialogComponent, {
+      width: '460px',
+      maxWidth: '92vw',
+      data: patient,
+    });
+  }
   onEdit(patient: Patient): void {
     this.router.navigate(['patient/edit', patient.id]);
   }
@@ -139,6 +164,12 @@ export class PatientComponent implements OnInit {
     return patient.telefone || patient.contato?.telefone || 'Não informado';
   }
 
+  formatPhone(patient: Patient): string {
+    const phone = this.getPhone(patient).replace(/\D/g, '');
+    if (phone.length === 11) return `(${phone.slice(0, 2)}) ${phone.slice(2, 7)}-${phone.slice(7)}`;
+    if (phone.length === 10) return `(${phone.slice(0, 2)}) ${phone.slice(2, 6)}-${phone.slice(6)}`;
+    return this.getPhone(patient);
+  }
   getStatus(patient: Patient): string {
     if (typeof patient.status === 'string') {
       return patient.status;

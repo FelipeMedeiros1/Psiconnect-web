@@ -5,6 +5,7 @@ export interface Patient {
   localAtendimento?: { id: number; nomeLugar: string } | null;
   email?: string;
   telefone?: string;
+  idade?: number;
   responsavel: {
     nomeResponsavel: string;
     cpfResponsavel: string;

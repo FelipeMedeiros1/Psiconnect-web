@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Informações do paciente</h2>
+
+<mat-dialog-content>
+  <dl class="patient-details">
+    <div><dt>Prontuário</dt><dd>{{ patient.numeroProntuario || patient.id }}</dd></div>
+    <div><dt>Nome</dt><dd>{{ patient.nome }}</dd></div>
+    <div><dt>Idade</dt><dd>{{ idade }}</dd></div>
+    <div><dt>Telefone</dt><dd>{{ telefone }}</dd></div>
+    <div><dt>Local de atendimento</dt><dd>{{ localAtendimento }}</dd></div>
+  </dl>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Fechar</button>
+</mat-dialog-actions>

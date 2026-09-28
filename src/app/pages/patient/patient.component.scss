@@ -1,3 +1,12 @@
+.patient-filters {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 12px;
+}
+
+.patient-filters mat-form-field {
+  width: 190px;
+}
 .loading-spinner {
   background: rgba(0, 0, 0, 0.02);
   padding: 25px;
@@ -37,12 +46,13 @@ mat-table {
   overflow-wrap: anywhere;
 }
 
-.mat-column-cpf {
+.mat-column-telefone {
   flex: 0 0 180px;
 }
 
+
 .mat-column-actions {
-  flex: 0 0 152px;
+  flex: 0 0 192px;
   justify-content: center;
   white-space: nowrap;
 }
@@ -100,12 +110,13 @@ mat-table {
     overflow-wrap: anywhere;
   }
 
-  .mat-column-cpf {
-    flex-basis: 118px;
+  .mat-column-telefone {
+    flex-basis: 145px;
   }
 
+
   .mat-column-actions {
-    flex-basis: 132px;
+    flex-basis: 168px;
   }
 
   .mat-column-actions button {

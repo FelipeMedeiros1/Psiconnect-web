@@ -9,7 +9,7 @@
       <mat-select [formControl]="psychologistControl">
         <mat-option [value]="0">Todos</mat-option>
         <mat-option *ngFor="let psychologist of psychologists$ | async" [value]="psychologist.id">
-          {{ psychologist.nome }} — {{ psychologist.crp }}
+          {{ psychologist.nome }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -18,7 +18,7 @@
       <mat-select [formControl]="patientControl">
         <mat-option [value]="0">Todos</mat-option>
         <mat-option *ngFor="let patient of patients$ | async" [value]="patient.id">
-          {{ patient.nome }} — {{ patient.cpf }}
+          {{ patient.numeroProntuario }} — {{ patient.nome }}
         </mat-option>
       </mat-select>
     </mat-form-field>

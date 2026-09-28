@@ -7,6 +7,8 @@
           matInput
           [matDatepicker]="picker"
           formControlName="dataNascimento"
+          readonly
+          (click)="picker.open()"
         />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -49,6 +51,15 @@
         <input matInput formControlName="email" />
       </mat-form-field>
 
+      <mat-form-field class="full-width">
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="cep" maxlength="9" />
+        <mat-hint *ngIf="buscandoCep">Buscando endereço...</mat-hint>
+        <mat-error *ngIf="form.get('cep')?.hasError('cepNaoEncontrado')">
+          CEP não encontrado.
+        </mat-error>
+      </mat-form-field>
+
       <mat-form-field>
         <mat-label>Logradouro</mat-label>
         <input matInput formControlName="logradouro" />
@@ -59,26 +70,9 @@
         <input matInput formControlName="numero" />
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field class="full-width">
         <mat-label>Complemento</mat-label>
         <input matInput formControlName="complemento" />
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>CEP</mat-label>
-        <input matInput formControlName="cep" maxlength="9" />
-        <mat-hint *ngIf="buscandoCep">Buscando endereço...</mat-hint>
-        <mat-error *ngIf="form.get('cep')?.hasError('cepNaoEncontrado')">
-          CEP não encontrado.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field class="full-width">
-        <mat-label>Local de atendimento</mat-label>
-        <mat-select formControlName="localAtendimentoId">
-          <mat-option [value]="0">Não definido</mat-option>
-          <mat-option *ngFor="let location of locations" [value]="location.id">{{ location.nomeLugar }}</mat-option>
-        </mat-select>
       </mat-form-field>
 
       <mat-form-field class="full-width">
@@ -95,7 +89,14 @@
         <mat-label>UF</mat-label>
         <input matInput formControlName="uf" />
       </mat-form-field>
-    </form>
+
+      <mat-form-field class="full-width">
+        <mat-label>Local de atendimento</mat-label>
+        <mat-select formControlName="localAtendimentoId">
+          <mat-option [value]="0">Não definido</mat-option>
+          <mat-option *ngFor="let location of locations" [value]="location.id">{{ location.nomeLugar }}</mat-option>
+        </mat-select>
+      </mat-form-field>    </form>
 
     <mat-card-actions style="display: flex; justify-content: center">
       <button mat-raised-button (click)="onSubmit()" color="primary">
@@ -116,6 +117,8 @@
           matInput
           [matDatepicker]="picker"
           formControlName="dataNascimento"
+          readonly
+          (click)="picker.open()"
         />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>

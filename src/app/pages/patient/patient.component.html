@@ -1,3 +1,13 @@
+<div class="patient-filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Situação</mat-label>
+    <mat-select [formControl]="statusControl">
+      <mat-option value="ativos">Ativos</mat-option>
+      <mat-option value="inativos">Inativos</mat-option>
+      <mat-option value="todos">Todos</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 <div *ngIf="patiens$ | async as patient; else loading">
   <div class="table-wrapper">
   <mat-table [dataSource]="patient" class="mat-elevation-z8">
@@ -23,10 +33,11 @@
       <mat-cell *matCellDef="let patient">{{ patient.email }}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="cpf">
-      <mat-header-cell *matHeaderCellDef>Cpf</mat-header-cell>
-      <mat-cell *matCellDef="let patient">{{ patient.cpf }}</mat-cell>
+    <ng-container matColumnDef="telefone">
+      <mat-header-cell *matHeaderCellDef>Telefone</mat-header-cell>
+      <mat-cell *matCellDef="let patient">{{ formatPhone(patient) }}</mat-cell>
     </ng-container>
+
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
@@ -36,6 +47,10 @@
       </mat-header-cell>
 
       <mat-cell *matCellDef="let patient">
+        <button mat-icon-button color="primary" aria-label="Ver informações do paciente"
+                matTooltip="Ver informações do paciente" (click)="onView(patient)">
+          <mat-icon>visibility</mat-icon>
+        </button>
         <button mat-icon-button aria-label="Editar Paciente" (click)="onEdit(patient)"
                 [disabled]="!patient.status"
                 [matTooltip]="patient.status ? 'Editar paciente' : 'Reative o paciente para editar'">

@@ -26,7 +26,27 @@ import { EvolutionFormDialogComponent } from './shared/evolution-form-dialog/evo
 import { ServiceLocationComponent } from './pages/service-location/service-location.component';
 import { ServiceLocationFormComponent } from './pages/service-location-form/service-location-form.component';
 import { DischargeDialogComponent } from './shared/discharge-dialog/discharge-dialog.component';
+import { PatientDetailsDialogComponent } from './shared/patient-details-dialog/patient-details-dialog.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepickerIntl } from '@angular/material/datepicker';
 
+export function portugueseDatepickerIntl(): MatDatepickerIntl {
+  const intl = new MatDatepickerIntl();
+  intl.calendarLabel = 'Calendário';
+  intl.openCalendarLabel = 'Abrir calendário';
+  intl.closeCalendarLabel = 'Fechar calendário';
+  intl.prevMonthLabel = 'Mês anterior';
+  intl.nextMonthLabel = 'Próximo mês';
+  intl.prevYearLabel = 'Ano anterior';
+  intl.nextYearLabel = 'Próximo ano';
+  intl.prevMultiYearLabel = 'Anos anteriores';
+  intl.nextMultiYearLabel = 'Próximos anos';
+  intl.switchToMonthViewLabel = 'Selecionar mês';
+  intl.switchToMultiYearViewLabel = 'Selecionar ano';
+  intl.startDateLabel = 'Data inicial';
+  intl.endDateLabel = 'Data final';
+  return intl;
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,6 +70,7 @@ import { DischargeDialogComponent } from './shared/discharge-dialog/discharge-di
     ServiceLocationComponent,
     ServiceLocationFormComponent,
     DischargeDialogComponent,
+    PatientDetailsDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +80,10 @@ import { DischargeDialogComponent } from './shared/discharge-dialog/discharge-di
     HttpClientModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    { provide: MatDatepickerIntl, useFactory: portugueseDatepickerIntl },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
