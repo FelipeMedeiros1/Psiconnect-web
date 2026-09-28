@@ -22,7 +22,7 @@ export class PatientComponent implements OnInit {
   loadingDetails = new Set<number>();
   detailErrors = new Set<number>();
 
-  displayedColumns = ['id', 'nome', 'telefone', 'actions'];
+  displayedColumns = ['id', 'nome', 'actions'];
   readonly statusControl = new FormControl<'ativos' | 'inativos' | 'todos'>('ativos', { nonNullable: true });
 
   constructor(

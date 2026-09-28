@@ -18,7 +18,7 @@ export class ConsultationMenuComponent {
   }
 
   constructor(private router: Router, private searchService: SearchService, breakpoint: BreakpointObserver) {
-    breakpoint.observe([Breakpoints.Handset]).subscribe(result => this.isHandset = result.matches);
+    breakpoint.observe('(max-width: 959px)').subscribe(result => this.isHandset = result.matches);
   }
 
   onSearch(value: string): void {

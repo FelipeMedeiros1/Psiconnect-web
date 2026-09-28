@@ -27,6 +27,7 @@ import { ServiceLocationComponent } from './pages/service-location/service-locat
 import { ServiceLocationFormComponent } from './pages/service-location-form/service-location-form.component';
 import { DischargeDialogComponent } from './shared/discharge-dialog/discharge-dialog.component';
 import { PatientDetailsDialogComponent } from './shared/patient-details-dialog/patient-details-dialog.component';
+import { PsychologistDetailsDialogComponent } from './shared/psychologist-details-dialog/psychologist-details-dialog.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerIntl } from '@angular/material/datepicker';
 
@@ -71,6 +72,7 @@ export function portugueseDatepickerIntl(): MatDatepickerIntl {
     ServiceLocationFormComponent,
     DischargeDialogComponent,
     PatientDetailsDialogComponent,
+    PsychologistDetailsDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Informações do psicólogo</h2>
+<mat-dialog-content>
+  <dl class="psychologist-details">
+    <div><dt>CRP</dt><dd>{{ psychologist.crp }}</dd></div>
+    <div><dt>Nome</dt><dd>{{ psychologist.nome }}</dd></div>
+    <div><dt>Telefone</dt><dd>{{ telefone }}</dd></div>
+    <div><dt>E-mail</dt><dd>{{ psychologist.contato.email || 'Não informado' }}</dd></div>
+    <div><dt>Especialidade</dt><dd>{{ psychologist.especialidade }}</dd></div>
+    <div><dt>Situação</dt><dd>{{ psychologist.ativo ? 'Ativo' : 'Inativo' }}</dd></div>
+  </dl>
+</mat-dialog-content>
+<mat-dialog-actions align="end"><button mat-button mat-dialog-close>Fechar</button></mat-dialog-actions>

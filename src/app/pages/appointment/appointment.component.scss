@@ -7,3 +7,101 @@
 .appointment-table-wrapper { width: 100%; overflow-x: auto; }
 .appointment-table-wrapper mat-table { min-width: 820px; }
 .mat-column-prontuario { flex: 0 0 130px; }
+
+.appointment-table-wrapper {
+  -webkit-overflow-scrolling: touch;
+  border-radius: 4px;
+}
+
+@media (max-width: 959px) {
+  .appointment-table-wrapper mat-table { min-width: 760px; }
+}
+
+@media (max-width: 599px) {
+  .appointment-table-wrapper mat-table { min-width: 700px; }
+  .mat-cell, .mat-header-cell { padding: 0 8px; }
+  .mat-column-prontuario { flex-basis: 105px; }
+}
+@media (max-width: 959px) {
+  .appointment-table-wrapper mat-table { min-width: 0; }
+  mat-cell, mat-header-cell { min-width: 0; word-break: normal; overflow-wrap: normal; }
+}
+
+@media (max-width: 599px) {
+  mat-table { display: block; background: transparent; box-shadow: none !important; }
+  mat-header-row { display: none; }
+  mat-row {
+    display: block;
+    min-height: 0;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+  }
+  mat-cell {
+    display: flex;
+    width: 100%;
+    min-height: 36px;
+    padding: 5px 0 !important;
+    border: 0;
+    white-space: normal;
+  }
+  mat-cell::before { flex: 0 0 100px; color: #616161; font-size: 12px; font-weight: 500; }
+  .mat-column-data::before { content: 'Data e hora'; }
+  .mat-column-prontuario::before { content: 'Prontuário'; }
+  .mat-column-paciente::before { content: 'Paciente'; }
+  .mat-column-psicologo::before { content: 'Psicólogo'; }
+  .mat-column-data,
+  .mat-column-prontuario,
+  .mat-column-paciente,
+  .mat-column-psicologo,
+  .mat-column-actions { flex: none; }
+  .mat-column-actions {
+    justify-content: flex-end;
+    padding-top: 8px !important;
+    border-top: 1px solid #eee;
+  }
+  .mat-column-actions::before { content: ''; flex: 1; }
+}
+.mobile-list-actions {
+  display: none;
+}
+
+.empty-state {
+  display: flex;
+  min-height: 180px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  color: #616161;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.empty-state mat-icon {
+  width: 40px;
+  height: 40px;
+  color: #9e9e9e;
+  font-size: 40px;
+}
+
+@media (max-width: 599px) {
+  .appointment-list {
+    width: 100%;
+  }
+
+  .mobile-list-actions {
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  .mobile-list-actions button {
+    width: 100%;
+    min-height: 44px;
+  }
+}

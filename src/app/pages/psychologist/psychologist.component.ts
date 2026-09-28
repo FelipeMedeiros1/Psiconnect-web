@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { catchError, combineLatest, map, Observable, of } from 'rxjs';
+import { catchError, combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { Psychologist, PsychologistService } from 'src/app/services/psychologist.service';
 import { Router } from '@angular/router';
 import { SearchService } from 'src/app/services/search.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FormControl } from '@angular/forms';
+import { PsychologistDetailsDialogComponent } from 'src/app/shared/psychologist-details-dialog/psychologist-details-dialog.component';
 
 @Component({
   selector: 'app-psychologist',
@@ -10,10 +13,11 @@ import { SearchService } from 'src/app/services/search.service';
   styleUrls: ['./psychologist.component.scss']
 })
 export class PsychologistComponent {
-  readonly displayedColumns = ['crp', 'ativo', 'nome', 'especialidade', 'email', 'actions'];
+  readonly displayedColumns = ['crp', 'nome', 'actions'];
+  readonly statusControl = new FormControl<'ativos' | 'inativos' | 'todos'>('ativos', { nonNullable: true });
   psychologists$: Observable<Psychologist[]>;
 
-  constructor(private service: PsychologistService, private router: Router, private search: SearchService) {
+  constructor(private service: PsychologistService, private router: Router, private search: SearchService, private dialog: MatDialog) {
     this.psychologists$ = this.load();
   }
 
@@ -21,6 +25,21 @@ export class PsychologistComponent {
     this.router.navigate(['psychologist/include']);
   }
 
+
+  onView(psychologist: Psychologist): void {
+    this.service.findById(psychologist.id).subscribe({
+      next: (details) => this.dialog.open(PsychologistDetailsDialogComponent, {
+        width: '460px',
+        maxWidth: 'calc(100vw - 24px)',
+        data: details,
+      }),
+      error: () => this.dialog.open(PsychologistDetailsDialogComponent, {
+        width: '460px',
+        maxWidth: 'calc(100vw - 24px)',
+        data: psychologist,
+      }),
+    });
+  }
   onEdit(psychologist: Psychologist): void {
     this.router.navigate(['psychologist/edit', psychologist.id]);
   }
@@ -43,7 +62,9 @@ export class PsychologistComponent {
     return combineLatest([
       this.service.list().pipe(catchError(() => of([]))),
       this.search.query$,
-    ]).pipe(map(([psychologists, query]) => psychologists.filter((psychologist) =>
+      this.statusControl.valueChanges.pipe(startWith('ativos' as const)),
+    ]).pipe(map(([psychologists, query, status]) => psychologists.filter((psychologist) =>
+      (status === 'todos' || (status === 'ativos' ? psychologist.ativo === true : psychologist.ativo === false)) &&
       this.search.matches(query, psychologist.id, psychologist.nome, psychologist.crp,
         psychologist.especialidade, psychologist.contato?.email,
         psychologist.ativo ? 'ativo' : 'inativo')

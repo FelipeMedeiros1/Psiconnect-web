@@ -1,6 +1,100 @@
-.time-display { display: flex; align-items: center; justify-content: center; gap: .25rem; font-size: 2rem; margin-bottom: 1rem; }
-.time-display .active { background: rgba(103, 58, 183, .15); }
-.clock-face { position: relative; width: 280px; height: 280px; margin: auto; border-radius: 50%; background: #f1f1f1; }
-.clock-center { position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 50%; background: #673ab7; transform: translate(-50%, -50%); }
-.clock-number { position: absolute; width: 38px; height: 38px; border: 0; border-radius: 50%; background: transparent; transform: translate(-50%, -50%); cursor: pointer; }
-.clock-number:hover, .clock-number.selected { color: white; background: #673ab7; }
+:host {
+  display: block;
+  width: 100%;
+}
+
+.time-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  margin-bottom: 16px;
+  font-size: clamp(20px, 7vw, 30px);
+  white-space: nowrap;
+}
+
+.time-display > button {
+  min-width: 44px;
+  padding: 0 8px;
+}
+
+.time-display .active {
+  background: rgba(103, 58, 183, 0.15);
+}
+
+.time-display mat-button-toggle-group {
+  flex: 0 0 auto;
+  margin-left: 6px;
+}
+
+:host ::ng-deep .time-display .mat-button-toggle-label-content {
+  padding: 0 10px;
+}
+
+.clock-face {
+  position: relative;
+  width: min(280px, 100%);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #f1f1f1;
+}
+
+.clock-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #673ab7;
+  transform: translate(-50%, -50%);
+}
+
+.clock-number {
+  position: absolute;
+  width: clamp(32px, 10vw, 38px);
+  height: clamp(32px, 10vw, 38px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.clock-number:hover,
+.clock-number.selected {
+  color: white;
+  background: #673ab7;
+}
+
+mat-dialog-content {
+  overflow: hidden;
+}
+
+mat-dialog-actions {
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 359px) {
+  .time-display {
+    gap: 2px;
+    margin-bottom: 12px;
+  }
+
+  .time-display > button {
+    min-width: 38px;
+    padding: 0 4px;
+  }
+
+  :host ::ng-deep .time-display .mat-button-toggle-label-content {
+    padding: 0 7px;
+  }
+
+  mat-dialog-actions button {
+    padding: 0 10px;
+  }
+}

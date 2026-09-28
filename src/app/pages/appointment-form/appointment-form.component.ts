@@ -200,6 +200,7 @@ export class AppointmentFormComponent implements OnInit {
     const dialog = this.dialog.open(TimePickerDialogComponent, {
       data: this.form.controls.horario.value,
       width: '360px',
+      maxWidth: 'calc(100vw - 24px)',
     });
     dialog.afterClosed().subscribe((time: string | undefined) => {
       if (time) {

@@ -22,3 +22,27 @@
     }
   }
 }
+
+@media (max-width: 959px) {
+  .app-header .mat-toolbar {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 599px) {
+  .app-header {
+    .mat-toolbar {
+      height: 52px;
+      padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+    }
+
+    img {
+      display: none;
+    }
+
+    a {
+      min-width: 48px;
+      padding: 0 8px;
+    }
+  }
+}

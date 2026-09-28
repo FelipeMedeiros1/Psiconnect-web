@@ -89,3 +89,38 @@
     width: 100%;
   }
 }
+.history-table-wrapper { -webkit-overflow-scrolling: touch; }
+
+@media (max-width: 959px) {
+  .history-filters > mat-form-field { flex: 1 1 210px; }
+  .history-filters .print-button { min-height: 56px; }
+  .history-table-wrapper mat-table { min-width: 800px; }
+}
+
+@media (max-width: 599px) {
+  .history-filters { margin-top: 8px; }
+  .history-filters .print-button { min-height: 44px; }
+  .history-table-wrapper mat-table { min-width: 760px; }
+  .history-summary { margin-bottom: 12px; }
+  .discharge-data > div:first-of-type { line-height: 1.5; }
+}
+@media (max-width: 959px) {
+  .history-table-wrapper mat-table { min-width: 0; }
+  mat-cell, mat-header-cell { min-width: 0; word-break: normal; overflow-wrap: normal; }
+}
+
+@media (max-width: 599px) {
+  .history-table-wrapper mat-table { display: block; background: transparent; box-shadow: none !important; }
+  .history-table-wrapper mat-header-row { display: none; }
+  .history-table-wrapper mat-row { display: block; min-height: 0; margin-bottom: 10px; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; }
+  .history-table-wrapper mat-cell { display: flex; width: 100%; min-height: 36px; padding: 5px 0 !important; border: 0; white-space: normal; }
+  .history-table-wrapper mat-cell::before { flex: 0 0 92px; color: #616161; font-size: 12px; font-weight: 500; }
+  .mat-column-data::before { content: 'Data e hora'; }
+  .mat-column-paciente::before { content: 'Paciente'; }
+  .mat-column-psicologo::before { content: 'Psicólogo'; }
+  .mat-column-historico::before { content: 'Registro'; }
+  .mat-column-acoes::before { content: ''; flex: 1; }
+  .mat-column-data, .mat-column-paciente, .mat-column-psicologo, .mat-column-historico, .mat-column-acoes { flex: none; }
+  .mat-column-acoes { justify-content: flex-end; padding-top: 8px !important; border-top: 1px solid #eee; }
+  .mat-column-acoes button { max-width: 100%; white-space: normal; }
+}

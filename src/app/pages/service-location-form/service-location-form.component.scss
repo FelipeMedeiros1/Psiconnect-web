@@ -1,1 +1,18 @@
 .location-form { display:grid; grid-template-columns:repeat(2,minmax(220px,1fr)); gap:12px; } mat-card-actions { padding:16px; } @media(max-width:700px){.location-form{grid-template-columns:1fr;}}
+
+mat-card { max-width: 900px; margin: 2em auto; }
+
+@media (max-width: 959px) {
+  mat-card { margin: 16px auto; }
+}
+
+@media (max-width: 599px) {
+  mat-card { margin: 0; }
+  mat-card-content { padding: 16px; }
+  mat-card-actions {
+    display: flex;
+    gap: 8px;
+    padding: 8px 16px 16px;
+  }
+  mat-card-actions button { flex: 1; min-height: 44px; }
+}

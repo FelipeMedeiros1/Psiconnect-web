@@ -125,3 +125,102 @@ mat-table {
     padding: 6px;
   }
 }
+
+.table-wrapper { -webkit-overflow-scrolling: touch; }
+
+@media (max-width: 959px) {
+  mat-table { min-width: 720px; }
+}
+
+@media (max-width: 599px) {
+  .patient-filters {
+    justify-content: stretch;
+    margin-bottom: 8px;
+  }
+  .patient-filters mat-form-field { width: 100%; }
+  mat-table { min-width: 670px; }
+}
+@media (max-width: 959px) {
+  mat-table { min-width: 0; }
+  .mat-column-id { flex: 0 0 90px; }
+  .mat-column-nome { min-width: 0; overflow-wrap: normal; }
+  .mat-column-telefone { flex: 0 1 170px; }
+}
+
+@media (max-width: 599px) {
+  mat-table { display: block; background: transparent; box-shadow: none !important; }
+  mat-header-row { display: none; }
+  mat-row {
+    display: block;
+    min-height: 0;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+  }
+  mat-cell {
+    display: flex;
+    width: 100%;
+    min-height: 36px;
+    padding: 5px 0 !important;
+    border: 0;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+  mat-cell::before {
+    flex: 0 0 92px;
+    color: #616161;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .mat-column-id::before { content: 'PR'; }
+  .mat-column-nome::before { content: 'Nome'; }
+  .mat-column-telefone::before { content: 'Telefone'; }
+  .mat-column-id,
+  .mat-column-nome,
+  .mat-column-telefone,
+  .mat-column-actions { flex: none; }
+  .mat-column-actions {
+    justify-content: flex-end;
+    padding-top: 8px !important;
+    border-top: 1px solid #eee;
+  }
+  .mat-column-actions::before { content: ''; flex: 1; }
+}
+@media (max-width: 599px) {
+  .patient-filters {
+    width: calc(100% - 4px);
+  }
+
+  mat-row {
+    width: calc(100% - 4px);
+    max-width: calc(100% - 4px);
+    overflow: hidden;
+  }
+
+  mat-cell {
+    max-width: 100%;
+  }
+
+  .mat-column-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 40px);
+    justify-content: end;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .mat-column-actions::before {
+    display: none;
+  }
+
+  .mat-column-actions button {
+    width: 40px;
+    min-width: 40px;
+    height: 44px;
+    padding: 6px;
+  }
+}

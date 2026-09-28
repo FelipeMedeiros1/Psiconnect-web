@@ -32,3 +32,21 @@ mat-card-actions {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 959px) {
+  mat-card { margin: 16px auto; }
+}
+
+@media (max-width: 599px) {
+  mat-card { margin: 0; }
+  mat-card-content { padding: 16px; }
+  mat-card-actions {
+    gap: 8px;
+    padding: 8px 0 0;
+  }
+  mat-card-actions > button { min-height: 44px; }
+  .continue-scheduling {
+    flex: 1 0 100%;
+    margin: 4px 0 0;
+  }
+}

@@ -12,9 +12,10 @@
   <div class="table-wrapper">
   <mat-table [dataSource]="patient" class="mat-elevation-z8">
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef>Prontuário</mat-header-cell>
-      <mat-cell *matCellDef="let patient">{{ patient.id }}</mat-cell>
+      <mat-header-cell *matHeaderCellDef>PR</mat-header-cell>
+      <mat-cell *matCellDef="let patient">{{ patient.numeroProntuario || patient.id }}</mat-cell>
     </ng-container>
+
 
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
@@ -31,11 +32,6 @@
     <ng-container matColumnDef="email">
       <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
       <mat-cell *matCellDef="let patient">{{ patient.email }}</mat-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="telefone">
-      <mat-header-cell *matHeaderCellDef>Telefone</mat-header-cell>
-      <mat-cell *matCellDef="let patient">{{ formatPhone(patient) }}</mat-cell>
     </ng-container>
 
 

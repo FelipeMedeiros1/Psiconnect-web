@@ -1,12 +1,24 @@
+<div class="psychologist-filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Situação</mat-label>
+    <mat-select [formControl]="statusControl">
+      <mat-option value="ativos">Ativos</mat-option>
+      <mat-option value="inativos">Inativos</mat-option>
+      <mat-option value="todos">Todos</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div class="table-wrapper">
 <mat-table *ngIf="psychologists$ | async as psychologists" [dataSource]="psychologists" class="mat-elevation-z8">
-  <ng-container matColumnDef="ativo"><mat-header-cell *matHeaderCellDef>Status</mat-header-cell><mat-cell *matCellDef="let item">{{ item.ativo ? 'Ativo' : 'Inativo' }}</mat-cell></ng-container>
   <ng-container matColumnDef="nome"><mat-header-cell *matHeaderCellDef>Nome</mat-header-cell><mat-cell *matCellDef="let item">{{ item.nome }}</mat-cell></ng-container>
   <ng-container matColumnDef="crp"><mat-header-cell *matHeaderCellDef>CRP</mat-header-cell><mat-cell *matCellDef="let item">{{ item.crp }}</mat-cell></ng-container>
-  <ng-container matColumnDef="especialidade"><mat-header-cell *matHeaderCellDef>Especialidade</mat-header-cell><mat-cell *matCellDef="let item">{{ item.especialidade }}</mat-cell></ng-container>
-  <ng-container matColumnDef="email"><mat-header-cell *matHeaderCellDef>E-mail</mat-header-cell><mat-cell *matCellDef="let item">{{ item.contato?.email }}</mat-cell></ng-container>
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef><button mat-icon-button (click)="onAdd()" aria-label="Cadastrar psicólogo" matTooltip="Cadastrar novo psicólogo"><mat-icon>add</mat-icon></button></mat-header-cell>
     <mat-cell *matCellDef="let item">
+      <button mat-icon-button color="primary" (click)="onView(item)"
+              aria-label="Ver informações do psicólogo" matTooltip="Ver informações do psicólogo">
+        <mat-icon>visibility</mat-icon>
+      </button>
       <button mat-icon-button (click)="onEdit(item)" aria-label="Editar psicólogo"
               [disabled]="!item.ativo"
               [matTooltip]="item.ativo ? 'Editar psicólogo' : 'Reative o psicólogo para editar'">
@@ -25,3 +37,5 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 </mat-table>
+
+</div>

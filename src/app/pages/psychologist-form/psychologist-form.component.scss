@@ -17,3 +17,18 @@ mat-card {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 959px) {
+  mat-card { margin: 16px auto; }
+}
+
+@media (max-width: 599px) {
+  mat-card { margin: 0; }
+  mat-card-content { padding: 16px; }
+  mat-card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  mat-card-actions button { min-height: 44px; flex: 1; }
+}

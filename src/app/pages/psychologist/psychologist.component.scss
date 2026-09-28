@@ -72,3 +72,52 @@ mat-table {
     flex-basis: 110px;
   }
 }
+
+.table-wrapper { -webkit-overflow-scrolling: touch; }
+mat-table { min-width: 720px; }
+
+@media (max-width: 599px) {
+  mat-table { min-width: 660px; }
+  .mat-column-actions { flex: 0 0 104px; }
+}
+@media (max-width: 959px) {
+  mat-table { min-width: 0; }
+  mat-cell, mat-header-cell { min-width: 0; word-break: normal; overflow-wrap: normal; }
+}
+
+@media (max-width: 599px) {
+  mat-table { display: block; background: transparent; box-shadow: none !important; }
+  mat-header-row { display: none; }
+  mat-row { display: block; min-height: 0; margin-bottom: 10px; padding: 10px 12px; border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; }
+  mat-cell { display: flex; width: 100%; min-height: 36px; padding: 5px 0 !important; border: 0; white-space: normal; }
+  mat-cell::before { flex: 0 0 104px; color: #616161; font-size: 12px; font-weight: 500; }
+  .mat-column-ativo::before { content: 'Situação'; }
+  .mat-column-nome::before { content: 'Nome'; }
+  .mat-column-crp::before { content: 'CRP'; }
+  .mat-column-especialidade::before { content: 'Especialidade'; }
+  .mat-column-email::before { content: 'E-mail'; }
+  .mat-column-ativo, .mat-column-nome, .mat-column-crp, .mat-column-especialidade, .mat-column-email, .mat-column-actions { flex: none; }
+  .mat-column-actions { justify-content: flex-end; padding-top: 8px !important; border-top: 1px solid #eee; }
+  .mat-column-actions::before { content: ''; flex: 1; }
+}
+.psychologist-filters {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 12px;
+}
+
+.psychologist-filters mat-form-field {
+  width: 190px;
+}
+
+@media (max-width: 599px) {
+  .psychologist-filters {
+    width: calc(100% - 4px);
+    justify-content: stretch;
+    margin-bottom: 8px;
+  }
+
+  .psychologist-filters mat-form-field {
+    width: 100%;
+  }
+}

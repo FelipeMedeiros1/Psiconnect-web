@@ -6,6 +6,7 @@
     <div><dt>Nome</dt><dd>{{ patient.nome }}</dd></div>
     <div><dt>Idade</dt><dd>{{ idade }}</dd></div>
     <div><dt>Telefone</dt><dd>{{ telefone }}</dd></div>
+    <div><dt>E-mail</dt><dd>{{ patient.email || patient.contato.email || 'Não informado' }}</dd></div>
     <div><dt>Local de atendimento</dt><dd>{{ localAtendimento }}</dd></div>
   </dl>
 </mat-dialog-content>

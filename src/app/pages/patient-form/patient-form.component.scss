@@ -44,3 +44,15 @@ mat-form-field {
     flex: 1;
   }
 }
+
+@media (max-width: 959px) {
+  mat-card { margin: 16px auto; }
+}
+
+@media (max-width: 599px) {
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .form-actions button { min-height: 44px; }
+}

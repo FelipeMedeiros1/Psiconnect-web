@@ -1,4 +1,14 @@
-<div class="appointment-table-wrapper" *ngIf="sessions$ | async as sessions">
+<div class="appointment-list" *ngIf="sessions$ | async as sessions">
+  <div class="mobile-list-actions">
+    <button mat-raised-button color="primary" (click)="onAdd()">
+      <mat-icon>add</mat-icon> Novo agendamento
+    </button>
+  </div>
+  <div class="empty-state" *ngIf="!sessions.length">
+    <mat-icon>event_busy</mat-icon>
+    <span>Nenhum agendamento encontrado.</span>
+  </div>
+  <div class="appointment-table-wrapper" *ngIf="sessions.length">
 <mat-table [dataSource]="sessions" class="mat-elevation-z8">
   <ng-container matColumnDef="data"><mat-header-cell *matHeaderCellDef>Data e Hora</mat-header-cell><mat-cell *matCellDef="let item">{{ item.data | date:'dd/MM/yyyy HH:mm' }}</mat-cell></ng-container>
   <ng-container matColumnDef="prontuario"><mat-header-cell *matHeaderCellDef>Nº Prontuário</mat-header-cell><mat-cell *matCellDef="let item">{{ prontuario(item) }}</mat-cell></ng-container>
@@ -21,4 +31,5 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 </mat-table>
+  </div>
 </div>
